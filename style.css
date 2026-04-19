@@ -1,7 +1,4 @@
-/* ═══════════════════════════════════════════
-   SPARSH SHARMA — PORTFOLIO
-   Absolute black. Zero filler.
-   ═══════════════════════════════════════════ */
+
 
 :root {
   --bg: #000;
@@ -24,7 +21,7 @@
   --ease: cubic-bezier(.16,1,.3,1);
 }
 
-/* ── Reset ── */
+/* Reset Utility */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:5rem;-webkit-font-smoothing:antialiased}
 body{background:var(--bg);color:var(--t1);font-family:var(--sans);font-size:15px;line-height:1.6;overflow-x:hidden}
@@ -34,21 +31,19 @@ ul{list-style:none}
 button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 ::selection{background:rgba(0,255,204,.18);color:#fff}
 
-/* ── Noise ── */
+/* Noise Utility */
 .noise{position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.02;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size:128px}
 
-/* ── Scroll bar ── */
+/* Custom scrollbar class */
 .scroll-bar{position:fixed;top:0;left:0;right:0;height:2px;z-index:999;pointer-events:none}
 .scroll-bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),#22d3ee);transition:width .08s linear}
 
-/* ── Layout ── */
+/* Layout Config */
 .wrap{width:min(var(--max),calc(100% - 2.5rem));margin:0 auto}
 
-/* ════════════════════════════════════════════
-   NAVIGATION  
-   ════════════════════════════════════════════ */
+/* Navigation Component */
 .nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:.75rem 0;
   transition:background .35s var(--ease),backdrop-filter .35s}
 .nav.scrolled{background:rgba(0,0,0,.82);backdrop-filter:blur(24px) saturate(1.4)}
@@ -101,9 +96,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .nav-burger.open span:first-child{transform:translateY(3.5px) rotate(45deg)}
 .nav-burger.open span:last-child{transform:translateY(-3.5px) rotate(-45deg)}
 
-/* ════════════════════════════════════════════
-   HERO  
-   ════════════════════════════════════════════ */
+/* Hero Section */
 .hero{min-height:100vh;display:flex;align-items:center;padding:7rem 0 4rem;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:-30%;right:-15%;width:70vw;height:70vw;border-radius:50%;
   background:radial-gradient(circle,rgba(0,255,204,.03) 0%,transparent 55%);pointer-events:none}
@@ -153,9 +146,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 @keyframes orb3{to{transform:rotate(360deg) translateX(105px) rotate(-360deg)}}
 @keyframes orb4{to{transform:rotate(360deg) translateX(200px) rotate(-360deg)}}
 
-/* ════════════════════════════════════════════
-   BUTTONS  
-   ════════════════════════════════════════════ */
+/* Button UI */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
   padding:.7rem 1.4rem;border-radius:100px;font-size:.85rem;font-weight:600;
   letter-spacing:-.01em;transition:transform .25s var(--ease),box-shadow .25s,background .25s,border-color .25s;cursor:pointer}
@@ -166,9 +157,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .btn-line svg{opacity:.5}
 .btn-big{padding:.9rem 2rem;font-size:.92rem}
 
-/* ════════════════════════════════════════════
-   SECTIONS  
-   ════════════════════════════════════════════ */
+/* Generic Sections */
 .sect{padding:clamp(4rem,8vw,7rem) 0;border-top:1px solid var(--border)}
 .sect-last{border-bottom:none}
 
@@ -178,9 +167,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .sect-title{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:700;letter-spacing:-.04em}
 .sect-sub{color:var(--t2);font-size:.9rem;margin-left:auto}
 
-/* ════════════════════════════════════════════
-   PROJECT CARDS  
-   ════════════════════════════════════════════ */
+/* Project Items */
 .card{position:relative;padding:2rem;border:1px solid var(--border);border-radius:20px;
   background:var(--s1);overflow:hidden;margin-bottom:1.25rem;
   transition:border-color .4s var(--ease),transform .4s var(--ease)}
@@ -234,9 +221,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 
 .card-acts{position:relative;z-index:2}
 
-/* ════════════════════════════════════════════
-   STACK GRID  
-   ════════════════════════════════════════════ */
+/* Stack Display Grid */
 .stack-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
   background:var(--border);border:1px solid var(--border);border-radius:18px;overflow:hidden}
 .stack-col{padding:1.6rem;background:var(--s1)}
@@ -246,9 +231,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .stack-list li{color:var(--t2);font-size:.85rem;padding:.35rem 0;transition:color .2s;cursor:default}
 .stack-list li:hover{color:var(--t1)}
 
-/* ════════════════════════════════════════════
-   CONTACT  
-   ════════════════════════════════════════════ */
+/* Contact CTA Area */
 .contact-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:3rem;align-items:start}
 .contact-lead{font-size:clamp(1.15rem,2.2vw,1.5rem);color:var(--t2);line-height:1.5;margin-bottom:1.8rem}
 .contact-links{display:flex;flex-direction:column;gap:1px;background:var(--border);
@@ -261,9 +244,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .cl-val{color:var(--t2);font-size:.85rem;transition:color .2s}
 .cl-item:hover .cl-val{color:var(--t1)}
 
-/* ════════════════════════════════════════════
-   PERSONAL — THE PERSON BEHIND THE CODE  
-   ════════════════════════════════════════════ */
+/* Personal profile section */
 .personal-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
 .personal-card{position:relative;padding:2rem;border:1px solid var(--border);border-radius:18px;
   background:var(--s1);overflow:hidden;transition:border-color .4s var(--ease),transform .4s var(--ease)}
@@ -327,22 +308,16 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
   .milestone-sub{display:none}
 }
 
-/* ════════════════════════════════════════════
-   FOOTER  
-   ════════════════════════════════════════════ */
+/* Main Footer */
 .foot{border-top:1px solid var(--border);padding:1.3rem 0}
 .foot-inner{display:flex;justify-content:space-between;align-items:center;
   color:var(--t3);font-size:.72rem;font-family:var(--mono);letter-spacing:.04em}
 
-/* ════════════════════════════════════════════
-   ANIMATIONS  
-   ════════════════════════════════════════════ */
+/* Intersection Transitions */
 [data-reveal]{opacity:0;transform:translateY(28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
 [data-reveal].vis{opacity:1;transform:translateY(0)}
 
-/* ════════════════════════════════════════════
-   MOBILE — Tablet  
-   ════════════════════════════════════════════ */
+/* Breakpoint: Tablet Layouts */
 @media(max-width:960px){
   .hero-grid{text-align:center}
   .hero-content{align-items:center}
@@ -369,9 +344,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
   .nav-cta{font-size:.85rem;padding:.7rem 1.3rem;margin-left:0;margin-top:.5rem}
 }
 
-/* ════════════════════════════════════════════
-   MOBILE — Phone  
-   ════════════════════════════════════════════ */
+/* Breakpoint: Mobile Phones */
 @media(max-width:600px){
   .wrap{width:calc(100% - 1.5rem)}
   .nav-inner{width:calc(100% - 1.5rem);padding:.45rem .45rem .45rem .55rem}

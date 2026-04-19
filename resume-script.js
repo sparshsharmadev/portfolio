@@ -1,6 +1,4 @@
-/* ════════════════════════════════════════════════════════
-   Resume — Print / Download controller
-   ════════════════════════════════════════════════════════ */
+/* Handle PDF download trigger */
 
 document.addEventListener('DOMContentLoaded', () => {
 

@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  // ── Scroll progress ──
+  // Scroll progress tracker
   const fill = document.getElementById("scroll-fill");
   const nav = document.getElementById("nav");
 
@@ -14,7 +14,7 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   onScroll();
 
-  // ── Mobile nav toggle ──
+  // Mobile nav logic
   const burger = document.getElementById("nav-burger");
   const menu = document.getElementById("nav-menu");
 
@@ -37,7 +37,7 @@
     });
   }
 
-  // ── Smooth scroll ──
+  // Smooth scrolling
   document.querySelectorAll('a[href^="#"]').forEach((a) => {
     a.addEventListener("click", (e) => {
       const hash = a.getAttribute("href");
@@ -50,7 +50,7 @@
     });
   });
 
-  // ── Reveal on scroll ──
+  // Reveal elements on scroll
   const reveals = document.querySelectorAll("[data-reveal]");
   if ("IntersectionObserver" in window) {
     const obs = new IntersectionObserver(
@@ -69,7 +69,7 @@
     reveals.forEach((el) => el.classList.add("vis"));
   }
 
-  // ── Active nav highlight ──
+  // Highlight active section nav
   const sects = document.querySelectorAll("section[id]");
   const links = document.querySelectorAll(".nav-link");
   if (sects.length && links.length) {
@@ -91,7 +91,7 @@
     sects.forEach((s) => so.observe(s));
   }
 
-  // ── Parallax orbital on mouse ──
+  // Orbital parallax on mousemove
   const orbital = document.querySelector(".hero-orbital");
   if (orbital && window.matchMedia("(pointer:fine)").matches) {
     document.addEventListener(
