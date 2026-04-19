@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sparsh Sharma — Resume</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="resume-style.css">
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+</head>
+
+<body>
+
+  <!-- Toolbar — hidden on print -->
+  <div class="toolbar no-print" id="toolbar">
+    <div class="toolbar-inner">
+      <a href="index.html" class="toolbar-back">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Portfolio
+      </a>
+      <button class="toolbar-btn" id="btn-download" type="button">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v8m0 0L5 7m3 3l3-3M3 13h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Save as PDF
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ RESUME ═══════════════════ -->
+  <div class="page" id="resume-page">
+
+    <!-- HEADER -->
+    <header class="r-header">
+      <div class="r-header-left">
+        <img src="assets/images/pfp.jpeg" alt="Sparsh Sharma" class="r-avatar">
+        <div>
+          <h1 class="r-name">Sparsh Sharma</h1>
+          <p class="r-role">Full-Stack Developer</p>
+        </div>
+      </div>
+      <div class="r-header-right">
+        <span>manshverse@gmail.com</span>
+        <span>+91 94480 51825</span>
+        <span>sparshsharma-dev.xyz</span>
+        <span>github.com/sparshsharma-dev</span>
+        <span>Bangalore, India</span>
+      </div>
+    </header>
+
+    <!-- SUMMARY -->
+    <section class="r-sect">
+      <h2 class="r-label">Summary</h2>
+      <p class="r-text">Self-taught full-stack developer shipping production-grade systems solo — AI platforms, satellite tracking dashboards, NLP tools, and encrypted mobile apps. Comfortable owning frontend, backend, database, and deployment end-to-end. Four shipped products with real users.</p>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="r-sect">
+      <h2 class="r-label">Projects</h2>
+
+      <div class="r-item">
+        <div class="r-item-head">
+          <h3>MansHDynamics <span class="r-tag">Satellite Ops</span></h3>
+          <span class="r-link">manshdynamics.vercel.app</span>
+        </div>
+        <ul>
+          <li>Real-time orbital traffic dashboard tracking 250+ satellites with SGP4 propagation and conjunction risk scoring</li>
+          <li>3D WebGL globe with orbital path rendering, timeline scrubber (5x–60x), Kalman-filtered telemetry</li>
+        </ul>
+        <div class="r-stack">React · Three.js · WebGL · SGP4 · WebSockets · Canvas</div>
+      </div>
+
+      <div class="r-item">
+        <div class="r-item-head">
+          <h3>Manshverse <span class="r-tag">AI Platform</span></h3>
+          <span class="r-link">manshverse.site</span>
+        </div>
+        <ul>
+          <li>Poly-model AI ecosystem — intelligent prompt routing across Groq/Gemini, custom reasoning engine, 45+ persona modes</li>
+          <li>Subscription billing (UPI), admin dashboard, multi-platform delivery (Web + Android)</li>
+        </ul>
+        <div class="r-stack">React · Vite · Firebase · Groq API · Gemini API</div>
+      </div>
+
+      <div class="r-item">
+        <div class="r-item-head">
+          <h3>ManshVoid <span class="r-tag">Computational Linguistics</span></h3>
+          <span class="r-link">manshvoid.vercel.app</span>
+        </div>
+        <ul>
+          <li>Cross-references 7,000+ languages to find or synthesize words for unnamed feelings via phonemic construction</li>
+          <li>Custom phoneme engine with vowel harmony, morphological synthesis, semantic topology mapping</li>
+        </ul>
+        <div class="r-stack">Vanilla JS · NLP Pipeline · Node.js · Phoneme Engine</div>
+      </div>
+
+      <div class="r-item">
+        <div class="r-item-head">
+          <h3>Manspacium <span class="r-tag">Mobile App</span></h3>
+        </div>
+        <ul>
+          <li>Encrypted realtime messaging — socket-based, persistent conversations, JWT auth, mobile-native gestures</li>
+        </ul>
+        <div class="r-stack">React Native · Expo · Node.js · Prisma · PostgreSQL · Socket.io</div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section class="r-sect">
+      <h2 class="r-label">Technical Skills</h2>
+      <div class="r-skills">
+        <div><strong>Frontend:</strong> React, Next.js, React Native, Expo, Three.js, WebGL, GSAP, Framer Motion, TypeScript, Vite</div>
+        <div><strong>Backend:</strong> Node.js, Express, Firebase, Prisma, PostgreSQL, WebSockets, Socket.io, REST, JWT, OAuth 2.0</div>
+        <div><strong>AI & Data:</strong> Groq API, Gemini API, OpenAI API, Prompt Engineering, SGP4/TLE, Kalman Filters</div>
+        <div><strong>Infra:</strong> Vercel, Netlify, EAS Build, Git, GitHub, CI/CD, Firebase Hosting, Linux</div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section class="r-sect r-sect--last">
+      <h2 class="r-label">Education</h2>
+      <div class="r-edu">
+        <div>
+          <strong>Self-Taught · Full-Stack Development</strong>
+          <span class="r-edu-sub"> — Systems architecture, AI integration, orbital mechanics, NLP</span>
+        </div>
+        <span class="r-date">2023 – Present</span>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="resume-script.js"></script>
+</body>
+
+</html>

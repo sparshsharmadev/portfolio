@@ -1,0 +1,15 @@
+# Vercel
+.vercel
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temp files
+.tmp-project.json

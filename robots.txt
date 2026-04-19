@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sparshsharma-dev.xyz/sitemap.xml
