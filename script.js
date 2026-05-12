@@ -91,18 +91,31 @@
     sects.forEach((s) => so.observe(s));
   }
 
-  // Orbital parallax on mousemove
-  const orbital = document.querySelector(".hero-orbital");
-  if (orbital && window.matchMedia("(pointer:fine)").matches) {
-    document.addEventListener(
-      "mousemove",
-      (e) => {
-        const x = (e.clientX / window.innerWidth - 0.5) * 20;
-        const y = (e.clientY / window.innerHeight - 0.5) * 20;
-        orbital.style.transform = `translateY(-50%) translate(${x}px, ${y}px)`;
-      },
-      { passive: true }
-    );
+  // Custom cursor (desktop only)
+  const cur = document.getElementById("cur");
+  if (cur && window.matchMedia("(pointer:fine)").matches) {
+    let mx = -100, my = -100, cx = -100, cy = -100;
+
+    document.addEventListener("mousemove", (e) => {
+      mx = e.clientX;
+      my = e.clientY;
+      if (!cur.classList.contains("vis")) cur.classList.add("vis");
+    }, { passive: true });
+
+    (function tick() {
+      cx += (mx - cx) * 0.15;
+      cy += (my - cy) * 0.15;
+      cur.style.left = cx + "px";
+      cur.style.top = cy + "px";
+      requestAnimationFrame(tick);
+    })();
+
+    const hoverTargets = "a, button, .card, .cred-card, .cl-item, .stack-col, .building-strip";
+    document.addEventListener("mouseover", (e) => {
+      if (e.target.closest(hoverTargets)) cur.classList.add("hover");
+    });
+    document.addEventListener("mouseout", (e) => {
+      if (e.target.closest(hoverTargets)) cur.classList.remove("hover");
+    });
   }
 })();
-

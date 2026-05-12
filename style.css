@@ -221,10 +221,37 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .cl-val{color:var(--t2);font-size:.85rem;transition:color .2s}
 .cl-item:hover .cl-val{color:var(--t1)}
 
+/* Custom Cursor */
+.cur{position:fixed;top:0;left:0;width:18px;height:18px;border-radius:50%;
+  border:1.5px solid rgba(255,255,255,.4);pointer-events:none;z-index:10000;
+  transform:translate(-50%,-50%);transition:width .25s var(--ease),height .25s var(--ease),
+  border-color .25s,background .25s;mix-blend-mode:difference;opacity:0}
+.cur.vis{opacity:1}
+.cur.hover{width:48px;height:48px;border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.06)}
+@media(pointer:coarse){.cur{display:none}}
+
 /* Utility colors still in use */
 .rose-text{color:#fb7185}
 .glow-rose{background:radial-gradient(circle,rgba(251,113,133,.07) 0%,transparent 55%)}
 
+/* Accreditations */
+.creds-grid{display:flex;flex-direction:column;gap:1rem}
+.cred-card{padding:2rem;border:1px solid var(--border);border-radius:18px;
+  background:var(--s1);transition:border-color .3s}
+.cred-card:hover{border-color:var(--border-h)}
+.cred-issuer{font-family:var(--mono);font-size:.65rem;font-weight:600;
+  letter-spacing:.18em;color:var(--cyan);margin-bottom:.6rem}
+.cred-name{font-size:1.3rem;font-weight:700;letter-spacing:-.03em;margin-bottom:.6rem}
+.cred-detail{color:var(--t2);font-size:.85rem;line-height:1.6;max-width:600px;margin-bottom:.8rem}
+.cred-date{font-family:var(--mono);font-size:.65rem;color:var(--t3);letter-spacing:.06em}
+
+/* Currently Building Strip */
+.sect-compact{padding:clamp(2rem,4vw,3rem) 0}
+.building-strip{display:flex;align-items:baseline;gap:1rem;padding:1.4rem 1.8rem;
+  border:1px solid var(--border);border-radius:14px;background:var(--s1)}
+.building-label{font-family:var(--mono);font-size:.65rem;font-weight:600;
+  letter-spacing:.12em;color:var(--cyan);text-transform:uppercase;white-space:nowrap}
+.building-item{color:var(--t2);font-size:.85rem;line-height:1.6}
 
 /* Main Footer */
 .foot{border-top:1px solid var(--border);padding:1.3rem 0}
@@ -242,13 +269,13 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
   .hero-sub{margin:0 auto}
   .hero-btns{justify-content:center}
   .hero-stats{max-width:100%}
-  .hero-orbital{display:none}
 
   .card-feats{grid-template-columns:1fr}
   .card-stats{max-width:100%}
   .stack-grid{grid-template-columns:1fr 1fr}
   .contact-grid{grid-template-columns:1fr}
   .sect-sub{margin-left:0;width:100%}
+  .building-strip{flex-direction:column;gap:.5rem}
 
   /* Mobile nav */
   .nav-burger{display:flex}
@@ -284,3 +311,4 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
   .foot-inner{flex-direction:column;gap:.4rem;text-align:center}
   .sect-head{flex-direction:column;align-items:flex-start;gap:.4rem}
 }
+
