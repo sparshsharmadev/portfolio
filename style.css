@@ -26,6 +26,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:5rem;-webkit-font-smoothing:antialiased}
 body{background:var(--bg);color:var(--t1);font-family:var(--sans);font-size:15px;line-height:1.6;overflow-x:hidden}
+@media(pointer:fine){body,body *{cursor:none!important}}
 img{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 ul{list-style:none}
@@ -221,13 +222,12 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .cl-val{color:var(--t2);font-size:.85rem;transition:color .2s}
 .cl-item:hover .cl-val{color:var(--t1)}
 
-/* Custom Cursor */
 .cur{position:fixed;top:0;left:0;width:18px;height:18px;border-radius:50%;
-  border:1.5px solid rgba(255,255,255,.4);pointer-events:none;z-index:10000;
-  transform:translate(-50%,-50%);transition:width .25s var(--ease),height .25s var(--ease),
-  border-color .25s,background .25s;mix-blend-mode:difference;opacity:0}
+  border:1.5px solid rgba(255,255,255,.5);pointer-events:none;z-index:10000;
+  transform:translate(-50%,-50%);transition:width .2s var(--ease),height .2s var(--ease),
+  border-color .2s,background .2s;mix-blend-mode:difference;opacity:0}
 .cur.vis{opacity:1}
-.cur.hover{width:48px;height:48px;border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.06)}
+.cur.hover{width:44px;height:44px;border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.07)}
 @media(pointer:coarse){.cur{display:none}}
 
 /* Utility colors still in use */
@@ -266,6 +266,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 @media(max-width:960px){
   .hero-grid{text-align:center}
   .hero-content{align-items:center}
+  .hero-badge{text-align:center;white-space:nowrap}
   .hero-sub{margin:0 auto}
   .hero-btns{justify-content:center}
   .hero-stats{max-width:100%}
@@ -276,6 +277,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
   .contact-grid{grid-template-columns:1fr}
   .sect-sub{margin-left:0;width:100%}
   .building-strip{flex-direction:column;gap:.5rem}
+  .creds-grid{gap:.75rem}
 
   /* Mobile nav */
   .nav-burger{display:flex}
@@ -298,6 +300,9 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 
   .hero{padding:6rem 0 3rem;min-height:auto}
   .hero-title{font-size:clamp(2.4rem,11vw,3.5rem)}
+  .hero-badge{font-size:.65rem;padding:.35rem .7rem}
+  .hero-btns{flex-direction:column;align-items:stretch;gap:.6rem}
+  .hero-btns .btn{justify-content:center;width:100%}
   .avatar-shell{width:160px;height:160px}
   .hero-stats{grid-template-columns:1fr}
   .h-stat{flex-direction:row;justify-content:space-between;align-items:center}
@@ -305,10 +310,19 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
   .card{padding:1.4rem}
   .card-hero{padding:1.4rem}
   .card-title{font-size:clamp(1.5rem,7vw,2rem)}
+  .card-acts{flex-direction:column!important;gap:.6rem!important}
+  .card-acts .btn{width:100%;justify-content:center}
   .card-stats{grid-template-columns:1fr}
+  .card-pills{gap:.25rem}
   .sect-title{font-size:clamp(1.4rem,5vw,1.8rem)}
   .stack-grid{grid-template-columns:1fr}
   .foot-inner{flex-direction:column;gap:.4rem;text-align:center}
   .sect-head{flex-direction:column;align-items:flex-start;gap:.4rem}
+
+  .building-strip{padding:1rem 1.1rem}
+  .cred-card{padding:1.3rem}
+  .case-stats{grid-template-columns:1fr 1fr}
+  .contact-grid{gap:2rem}
+  .cl-item{padding:.9rem 1rem}
 }
 

@@ -54,8 +54,15 @@
   letter-spacing:.08em;font-family:var(--mono)}
 
 @media(max-width:600px){
-  .case-main{padding:6rem 1rem 3rem}
+  .case-main{padding:5.5rem 1rem 3rem}
   .case-title{font-size:clamp(2rem,10vw,3rem)}
-  .case-meta{flex-direction:column;align-items:flex-start}
+  .case-subtitle{font-size:.92rem}
+  .case-meta{flex-direction:column;align-items:flex-start;gap:.5rem}
+  .case-h2{font-size:1.1rem}
+  .case-arch-item{padding:1.1rem}
   .case-stats{grid-template-columns:1fr 1fr}
+  .case-stat strong{font-size:1.2rem}
+  .case-section p{font-size:.88rem}
+  .case-toolbar{padding:.75rem 0}
+  .case-back{font-size:.75rem}
 }
