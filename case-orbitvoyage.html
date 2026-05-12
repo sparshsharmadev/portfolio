@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OrbitVoyage — Case Study | Sparsh Sharma</title>
+  <meta name="description" content="How I built a real-time satellite tracking dashboard with SGP4 propagation, conjunction detection, and 3D WebGL visualization at 17.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="case-style.css">
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+</head>
+<body>
+
+  <div class="noise" aria-hidden="true"></div>
+
+  <div class="case-toolbar">
+    <a href="index.html#work" class="case-back">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to portfolio
+    </a>
+  </div>
+
+  <main class="case-main">
+    <article class="case-article">
+
+      <header class="case-header">
+        <span class="case-tag">Case Study</span>
+        <h1 class="case-title cyan">OrbitVoyage</h1>
+        <p class="case-subtitle">Real-time satellite tracking dashboard with SGP4 propagation, conjunction detection, and 3D WebGL globe visualization.</p>
+        <div class="case-meta">
+          <span>React · Three.js · WebGL · NestJS · SGP4 · WebSockets</span>
+          <a href="https://orbitvoyage.vercel.app" target="_blank" rel="noopener noreferrer" class="case-link">Live site &#x2197;</a>
+        </div>
+      </header>
+
+      <section class="case-section">
+        <h2 class="case-h2">The Problem</h2>
+        <p>I wanted to build something that pushed beyond typical web development — something that required real math, real data pipelines, and real-time rendering constraints. Satellite tracking was the answer: it demands SGP4 orbital mechanics, sub-frame rendering budgets, and the ability to process thousands of state vectors per second.</p>
+        <p>The core challenge: take raw Two-Line Element (TLE) data from NORAD/CelesTrak, propagate orbital positions using the SGP4 algorithm, detect potential collision events in near-real-time, and render all of it on a 3D WebGL globe — all within a 16ms frame budget to maintain 60fps.</p>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2">Architecture</h2>
+        <p>The system is split into three layers:</p>
+
+        <div class="case-arch">
+          <div class="case-arch-item">
+            <h3>Data Ingestion (NestJS Backend)</h3>
+            <p>A scheduled cron job pulls TLE catalogs from CelesTrak every hour across 8 satellite groups (Starlink, GPS, GEO, weather, ISS, etc.). Each group has a target allocation — 130 Starlink objects, 55 GEO, 45 GPS, etc. — capped at 360 objects per propagation batch to keep latency manageable. TLEs are parsed from NORAD's three-line format, deduplicated by NORAD ID, and cached in memory with a fallback catalog of 12 hardcoded objects (ISS, Hubble, GOES, Sentinel, Landsat, GPS) in case CelesTrak is unreachable.</p>
+          </div>
+          <div class="case-arch-item">
+            <h3>Orbital Propagation</h3>
+            <p>The backend sends TLE batches to a Python ML service that runs SGP4 propagation. The service returns full state vectors — position (x, y, z in ECI coordinates) and velocity (vx, vy, vz) — plus derived latitude, longitude, and altitude. On the frontend, I wrote <code>orbitMath.ts</code> to derive classical orbital elements from these state vectors: semi-major axis, eccentricity, inclination, period, and perigee/apogee altitudes. The math uses the vis-viva equation (specific orbital energy = v²/2 − μ/r) and the angular momentum cross product to extract Keplerian elements.</p>
+          </div>
+          <div class="case-arch-item">
+            <h3>Conjunction Detection</h3>
+            <p>A separate service scans all propagated states every 30 seconds. It sends positions to the ML service which computes pairwise miss distances, time-of-closest-approach (TCA), collision probability, and a normalized 0–1 risk score. Events below a 0.1 risk threshold are suppressed to avoid noise. Events above threshold are broadcast to all connected clients via WebSocket. The conjunction event model includes both objects' NORAD IDs, the TCA timestamp, miss distance in km, and a discrete risk level (LOW / MEDIUM / HIGH / CRITICAL).</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2">The Hardest Problems</h2>
+
+        <h3 class="case-h3">1. ECI-to-Sphere Coordinate Mapping</h3>
+        <p>Real orbital altitudes vary enormously — LEO satellites orbit at ~400km while GEO satellites are at ~36,000km. If I mapped these linearly onto the globe, LEO objects would be invisible dots on the surface and GEO objects would be off-screen. I solved this with logarithmic altitude compression: <code>visualAltitude = log(1 + altitude / 450) × 0.45</code>. This preserves the relative ordering of orbital bands (LEO < MEO < GEO < HEO) while keeping everything visible and distinguishable on screen. Satellites are color-coded by band — cyan for LEO, purple for MEO, amber for GEO, rose for HEO.</p>
+
+        <h3 class="case-h3">2. Frame Budget Management</h3>
+        <p>Each render frame needs to update 250+ satellite positions, recalculate 3D sphere coordinates, and render instanced geometry on the globe. The <code>useSatelliteRenderData</code> hook uses React's <code>useMemo</code> to only recompute positions when the orbital state array changes — not on every frame. The Three.js globe uses instanced meshes rather than individual mesh objects, reducing draw calls from 250+ to 1.</p>
+
+        <h3 class="case-h3">3. TLE Staleness</h3>
+        <p>TLEs degrade in accuracy over time. A TLE that's 3 days old can produce position errors of several kilometers. The hourly refresh cycle keeps the catalog fresh, but I also built the fallback system so the dashboard never shows an empty globe — even if CelesTrak is down for hours, the 12 hardcoded high-priority objects (ISS, Hubble, NOAA, GOES, Sentinel, Landsat, GPS) keep the visualization meaningful.</p>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2">What I'd Do Differently</h2>
+        <p>The conjunction detection currently relies on the ML service for all pairwise distance calculations. For a production system, I'd implement a spatial indexing structure (octree or k-d tree) on the backend to pre-filter candidate pairs before sending them to the ML model — reducing the O(n²) comparison space to O(n log n). I'd also add historical TLE archiving to track orbital decay over time, and implement SGP4 propagation directly in the browser using a WASM-compiled version of the Vallado reference implementation, eliminating the backend round-trip for position updates.</p>
+      </section>
+
+      <section class="case-section case-numbers">
+        <h2 class="case-h2">By the Numbers</h2>
+        <div class="case-stats">
+          <div class="case-stat">
+            <strong>360</strong>
+            <span>Objects per propagation batch</span>
+          </div>
+          <div class="case-stat">
+            <strong>8</strong>
+            <span>CelesTrak satellite groups</span>
+          </div>
+          <div class="case-stat">
+            <strong>30s</strong>
+            <span>Conjunction scan interval</span>
+          </div>
+          <div class="case-stat">
+            <strong>&lt;16ms</strong>
+            <span>Target frame budget</span>
+          </div>
+          <div class="case-stat">
+            <strong>12</strong>
+            <span>Hardcoded fallback objects</span>
+          </div>
+          <div class="case-stat">
+            <strong>4</strong>
+            <span>Orbital band classifications</span>
+          </div>
+        </div>
+      </section>
+
+    </article>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <span>&copy; 2026 Sparsh Sharma</span>
+      <span>Built from scratch. Bangalore, India.</span>
+    </div>
+  </footer>
+
+</body>
+</html>

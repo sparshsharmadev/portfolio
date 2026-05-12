@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lexivoid — Case Study | Sparsh Sharma</title>
+  <meta name="description" content="How I built a computational linguistics engine that synthesizes new words from 14 language families using phonemic construction and emotional-tone mapping.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="case-style.css">
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+</head>
+<body>
+
+  <div class="noise" aria-hidden="true"></div>
+
+  <div class="case-toolbar">
+    <a href="index.html#work" class="case-back">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to portfolio
+    </a>
+  </div>
+
+  <main class="case-main">
+    <article class="case-article">
+
+      <header class="case-header">
+        <span class="case-tag">Case Study</span>
+        <h1 class="case-title purple">Lexivoid</h1>
+        <p class="case-subtitle">A computational linguistics engine that finds or synthesizes words for feelings that have no name — drawing from 14 language families and 7,000+ languages.</p>
+        <div class="case-meta">
+          <span>Vanilla JS · Custom Phoneme Engine · NLP Pipeline · Mistral AI</span>
+          <a href="https://lexivoid.vercel.app" target="_blank" rel="noopener noreferrer" class="case-link">Live site &#x2197;</a>
+        </div>
+      </header>
+
+      <section class="case-section">
+        <h2 class="case-h2">The Problem</h2>
+        <p>Every language has gaps — feelings that exist but have no word. The German "Waldeinsamkeit" (the solitude of being alone in a forest), the Portuguese "saudade" (longing for something you've lost), the Japanese "mono no aware" (the bittersweet awareness of impermanence). These words exist scattered across thousands of languages, but there's no tool that searches all of them at once — or creates new ones when nothing exists.</p>
+        <p>I wanted to build something that sits at the intersection of linguistics, AI, and emotional intelligence: describe a feeling in plain language, and the engine either finds a real word from another language that captures it, or synthesizes an entirely new word using the phonemic rules of the language families most suited to that emotional texture.</p>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2">How the Phoneme Engine Works</h2>
+        <p>The core of Lexivoid is a custom-built phonemic synthesis engine written in pure JavaScript. No NLP libraries, no pre-trained models for the word generation — just raw phonological data and algorithmic construction.</p>
+
+        <div class="case-arch">
+          <div class="case-arch-item">
+            <h3>Step 1: Common Word Filtering</h3>
+            <p>Before anything else, the engine checks if the input describes a common emotion that already has well-known names. A database of 20+ emotion categories with 200+ trigger phrases catches inputs like "I feel lonely" or "I'm anxious" and redirects them with a curated response explaining the existing words across languages — rather than inventing a redundant neologism. Pattern matching handles variations like "I feel so X", "feeling of X", "I'm really X", and short-form inputs.</p>
+          </div>
+          <div class="case-arch-item">
+            <h3>Step 2: Emotional Tone Analysis</h3>
+            <p>The input text is analyzed across 8 emotional dimensions: soft, deep, sharp, warm, light, dark, bittersweet, and restless. Each dimension has a curated keyword set (~15-20 words) that maps to phonemic qualities. Phrase-level bonuses boost scores — "but also" and "and yet" boost bittersweet, "can't explain" boosts deep, "used to" boosts bittersweet + warm. Text length itself is a signal: short inputs skew sharp, long inputs skew deep. The system outputs a primary and secondary emotional register that drives phoneme selection.</p>
+          </div>
+          <div class="case-arch-item">
+            <h3>Step 3: Language Family Selection</h3>
+            <p>14 language families are mapped with full phoneme inventories — onset consonants, vowel nuclei, and coda consonants — each with a distinctive "flavor": Romance (flowing), Germanic (grounded), Slavic (resonant), Japonic (delicate), Semitic (ancient), Celtic (mystical), Indo-Aryan (transcendent), Greek (philosophical), Austronesian (gentle), Finno-Ugric (stark), Turkic (harmonic), Koreanic (balanced), Bantu (rhythmic). The engine selects 2-3 families based on emotional keyword matching, then alternates between their phoneme sets during syllable construction.</p>
+          </div>
+          <div class="case-arch-item">
+            <h3>Step 4: Syllable Construction</h3>
+            <p>Each syllable follows the onset-nucleus-coda model. The emotional profile biases phoneme selection — "soft" emotions favor nasal/liquid onsets (m, n, l, w) and front vowels (i, e), while "deep" emotions favor voiced stops (d, b, g) and back vowels (o, u, a). A weighted picker gives 65% priority to phonemes that overlap between the emotional profile and the language family's inventory, creating words that "sound like" they belong to that language while carrying the emotional weight of the input.</p>
+          </div>
+          <div class="case-arch-item">
+            <h3>Step 5: Post-Processing</h3>
+            <p>Raw syllable concatenation produces unpronounceable consonant clusters. A cleanup pass inserts epenthetic vowels when consonant runs exceed 2 characters. A soft-ending pass probabilistically appends terminal vowels for euphony. Length bounds (4-11 characters) are enforced with natural syllable-boundary cutting. A ban-list prevents the engine from accidentally generating common English words. Finally, IPA pronunciation is auto-generated using a custom digraph-to-IPA mapper that handles diphthongs, geminate vowels, and aspirated consonants.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2">The Hard Part: Determinism</h2>
+        <p>Every word generation uses a seeded PRNG (multiplicative hash of the input string). This means the same input always produces the same word — "the feeling of reading a book someone you lost used to love" will always generate the exact same neologism with the exact same pronunciation, etymology, and language family attribution. This was a deliberate design decision: the words feel "discovered" rather than randomly generated, which is psychologically important for the user experience.</p>
+        <p>The seed function uses <code>Math.imul</code> with XOR-shift mixing (h ^ (h >>> 16), multiplied by 0x45d9f3b) to produce well-distributed pseudorandom values from string inputs. This avoids the bias problems of simple hash-to-mod approaches.</p>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2">What I'd Do Differently</h2>
+        <p>The emotional analysis is currently keyword-based, which means it misses metaphorical language and contextual nuance. A transformer-based sentiment model (even a small one like DistilBERT) would dramatically improve the emotional tone detection. I'd also expand the untranslatable word database beyond the current curated set — there are academic datasets of lexical gaps that could be integrated. The phoneme engine could benefit from vowel harmony rules (which Turkic and Finno-Ugric languages enforce strictly) to make generated words sound more linguistically authentic.</p>
+      </section>
+
+      <section class="case-section case-numbers">
+        <h2 class="case-h2">By the Numbers</h2>
+        <div class="case-stats">
+          <div class="case-stat">
+            <strong>14</strong>
+            <span>Language family phoneme sets</span>
+          </div>
+          <div class="case-stat">
+            <strong>8</strong>
+            <span>Emotional dimensions</span>
+          </div>
+          <div class="case-stat">
+            <strong>200+</strong>
+            <span>Common emotion trigger phrases</span>
+          </div>
+          <div class="case-stat">
+            <strong>0</strong>
+            <span>External NLP dependencies</span>
+          </div>
+        </div>
+      </section>
+
+    </article>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <span>&copy; 2026 Sparsh Sharma</span>
+      <span>Built from scratch. Bangalore, India.</span>
+    </div>
+  </footer>
+
+</body>
+</html>
