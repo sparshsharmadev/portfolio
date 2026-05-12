@@ -18,6 +18,7 @@
   --sans: 'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
   --mono: 'JetBrains Mono','Cascadia Code',monospace;
   --max: 1140px;
+  --rose: #fb7185;
   --ease: cubic-bezier(.16,1,.3,1);
 }
 
@@ -83,9 +84,6 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
   color:var(--cyan);font-size:.75rem;font-weight:500;font-family:var(--mono);
   letter-spacing:.04em;transition:border-color .25s,background .25s}
 .nav-cta:hover{border-color:rgba(0,255,204,.2);background:var(--cyan-d)}
-.cta-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);
-  box-shadow:0 0 8px var(--cyan-g);animation:pulse 2s ease infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
 
 /* Burger */
 .nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;
@@ -108,8 +106,6 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .hero-badge{display:inline-flex;align-items:center;gap:.55rem;width:fit-content;
   padding:.4rem .9rem .4rem .55rem;border:1px solid var(--border);border-radius:100px;
   background:var(--s1);font-family:var(--mono);font-size:.7rem;color:var(--t3);letter-spacing:.05em}
-.badge-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);
-  box-shadow:0 0 10px var(--cyan-g);animation:pulse 2s ease infinite}
 
 .hero-title{font-size:clamp(3rem,8vw,6.5rem);font-weight:800;line-height:.9;letter-spacing:-.06em}
 .hero-line{display:block}
@@ -125,26 +121,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .h-stat strong{font-size:1.2rem;font-weight:700;letter-spacing:-.03em}
 .h-stat span{font-size:.65rem;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-family:var(--mono)}
 
-/* Orbital decoration */
-.hero-orbital{position:absolute;top:50%;right:5%;width:450px;height:450px;
-  transform:translateY(-50%);pointer-events:none}
-.orbital-ring{position:absolute;border-radius:50%;border:1px solid rgba(0,255,204,.05);
-  animation:spin linear infinite}
-.r1{inset:0;animation-duration:28s}
-.r2{inset:55px;animation-duration:20s;animation-direction:reverse;border-color:rgba(0,255,204,.04)}
-.r3{inset:120px;animation-duration:16s;border-color:rgba(0,255,204,.03)}
-@keyframes spin{to{transform:rotate(360deg)}}
 
-.o-dot{position:absolute;width:4px;height:4px;border-radius:50%;background:var(--cyan);
-  box-shadow:0 0 8px var(--cyan-g)}
-.o1{top:0;left:50%;animation:orb1 28s linear infinite}
-.o2{top:55px;right:55px;animation:orb2 20s linear infinite reverse}
-.o3{bottom:120px;left:120px;animation:orb3 16s linear infinite}
-.o4{top:40%;right:0;animation:orb4 24s linear infinite;width:3px;height:3px;opacity:.4}
-@keyframes orb1{to{transform:rotate(360deg) translateX(225px) rotate(-360deg)}}
-@keyframes orb2{to{transform:rotate(360deg) translateX(170px) rotate(-360deg)}}
-@keyframes orb3{to{transform:rotate(360deg) translateX(105px) rotate(-360deg)}}
-@keyframes orb4{to{transform:rotate(360deg) translateX(200px) rotate(-360deg)}}
 
 /* Button UI */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
@@ -244,69 +221,10 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .cl-val{color:var(--t2);font-size:.85rem;transition:color .2s}
 .cl-item:hover .cl-val{color:var(--t1)}
 
-/* Personal profile section */
-.personal-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
-.personal-card{position:relative;padding:2rem;border:1px solid var(--border);border-radius:18px;
-  background:var(--s1);overflow:hidden;transition:border-color .4s var(--ease),transform .4s var(--ease)}
-.personal-card:hover{border-color:var(--border-h);transform:translateY(-3px)}
-
-.card-milestones{grid-column:1 / -1}
-
-.personal-glow{position:absolute;top:-60px;right:-60px;width:300px;height:300px;border-radius:50%;
-  opacity:0;transition:opacity .5s var(--ease);pointer-events:none}
-.personal-card:hover .personal-glow{opacity:1}
-.glow-warm{background:radial-gradient(circle,rgba(255,180,100,.06) 0%,transparent 55%)}
+/* Utility colors still in use */
+.rose-text{color:#fb7185}
 .glow-rose{background:radial-gradient(circle,rgba(251,113,133,.07) 0%,transparent 55%)}
 
-.personal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem}
-.personal-label{font-family:var(--mono);font-size:.62rem;color:var(--t3);
-  letter-spacing:.1em;text-transform:uppercase;
-  padding:.25rem .6rem;border:1px solid var(--border);border-radius:100px}
-.personal-zodiac{font-size:.75rem;color:var(--t3);font-family:var(--mono);letter-spacing:.04em}
-
-.personal-name{font-size:clamp(1.4rem,3vw,2rem);font-weight:700;letter-spacing:-.04em;
-  line-height:1.1;margin-bottom:.8rem}
-.rose-text{color:#fb7185}
-
-.personal-bio{color:var(--t2);font-size:.88rem;line-height:1.7}
-
-.personal-links{display:flex;flex-direction:column;gap:1px;margin-top:1.2rem;
-  background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.personal-link-item{padding:.85rem 1rem;background:var(--s2);display:flex;
-  justify-content:space-between;align-items:center;transition:background .25s;font-size:.85rem}
-.personal-link-item:hover{background:var(--s3)}
-.pl-label{font-family:var(--mono);font-size:.6rem;color:var(--t3);
-  letter-spacing:.1em;text-transform:uppercase}
-.pl-val{color:var(--t2);transition:color .2s}
-.personal-link-item:hover .pl-val{color:var(--t1)}
-
-/* Milestones */
-.milestone-list{display:flex;flex-direction:column;gap:1px;
-  background:var(--border);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-.milestone-item{padding:1rem 1.3rem;background:var(--s2);
-  display:grid;grid-template-columns:auto 1fr auto;gap:.8rem;align-items:center;
-  transition:background .25s}
-.milestone-item:hover{background:var(--s3)}
-.milestone-date{font-family:var(--mono);font-size:.8rem;font-weight:600;color:var(--cyan);
-  min-width:56px;letter-spacing:.02em}
-.milestone-label{font-size:.9rem;font-weight:500;color:var(--t1)}
-.milestone-sub{font-family:var(--mono);font-size:.65rem;color:var(--t3);
-  letter-spacing:.04em;text-align:right}
-
-/* Two-up layout for about page */
-.two-up{display:grid;grid-template-columns:1.4fr 1fr;gap:1.25rem}
-
-@media(max-width:960px){
-  .personal-grid{grid-template-columns:1fr}
-  .card-milestones{grid-column:auto}
-  .two-up{grid-template-columns:1fr}
-}
-@media(max-width:600px){
-  .personal-card{padding:1.4rem}
-  .personal-name{font-size:clamp(1.2rem,5vw,1.6rem)}
-  .milestone-item{grid-template-columns:auto 1fr;gap:.5rem}
-  .milestone-sub{display:none}
-}
 
 /* Main Footer */
 .foot{border-top:1px solid var(--border);padding:1.3rem 0}
