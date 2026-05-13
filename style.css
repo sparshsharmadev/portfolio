@@ -111,8 +111,6 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
   letter-spacing:.05em;transition:all .3s var(--ease);text-decoration:none;
   cursor:pointer;backdrop-filter:blur(10px);will-change:transform}
 .hero-badge:hover{background:rgba(255,255,255,.06);border-color:rgba(0,255,204,.35);color:var(--cyan);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,255,204,.15)}
-.badge-dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;box-shadow:0 0 8px var(--cyan);animation:pulse-dot 2s infinite}
-@keyframes pulse-dot{0%{opacity:.4}50%{opacity:1;box-shadow:0 0 12px var(--cyan)}100%{opacity:.4}}
 
 .hero-title{font-size:clamp(3.2rem,8.5vw,7rem);font-weight:800;line-height:.88;letter-spacing:-.07em}
 .hero-line{display:block}
