@@ -105,9 +105,14 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 
 .hero-content{display:flex;flex-direction:column;gap:1.5rem}
 
-.hero-badge{display:inline-flex;align-items:center;gap:.55rem;width:fit-content;
-  padding:.4rem .9rem .4rem .55rem;border:1px solid var(--border);border-radius:100px;
-  background:var(--s1);font-family:var(--mono);font-size:.7rem;color:var(--t3);letter-spacing:.05em}
+.hero-badge{display:inline-flex;align-items:center;gap:.6rem;width:fit-content;
+  padding:.5rem 1.1rem .5rem .7rem;border:1px solid rgba(255,255,255,.08);border-radius:100px;
+  background:rgba(255,255,255,.03);font-family:var(--mono);font-size:.72rem;color:var(--t2);
+  letter-spacing:.05em;transition:all .3s var(--ease);text-decoration:none;
+  cursor:pointer;backdrop-filter:blur(10px);will-change:transform}
+.hero-badge:hover{background:rgba(255,255,255,.06);border-color:rgba(0,255,204,.35);color:var(--cyan);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,255,204,.15)}
+.badge-dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;box-shadow:0 0 8px var(--cyan);animation:pulse-dot 2s infinite}
+@keyframes pulse-dot{0%{opacity:.4}50%{opacity:1;box-shadow:0 0 12px var(--cyan)}100%{opacity:.4}}
 
 .hero-title{font-size:clamp(3.2rem,8.5vw,7rem);font-weight:800;line-height:.88;letter-spacing:-.07em}
 .hero-line{display:block}
