@@ -128,7 +128,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
   padding:.7rem 1.4rem;border-radius:100px;font-size:.85rem;font-weight:600;
   letter-spacing:-.01em;transition:transform .25s var(--ease),box-shadow .25s,background .25s,border-color .25s;cursor:pointer}
-.btn-fill{background:var(--cyan);color:#000;border:1px solid var(--cyan);font-weight:700}
+.btn-fill{background:var(--cyan);color:#000;border:1px solid var(--cyan);font-weight:700;will-change:transform}
 .btn-fill:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--cyan-g)}
 .btn-line{background:transparent;color:var(--t2);border:1px solid var(--border)}
 .btn-line:hover{color:var(--t1);border-color:var(--border-h);background:rgba(255,255,255,.03)}
@@ -227,7 +227,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
   transform:translate(-50%,-50%);transition:width .2s var(--ease),height .2s var(--ease),
   border-color .2s,background .2s;mix-blend-mode:difference;opacity:0}
 .cur.vis{opacity:1}
-.cur.hover{width:44px;height:44px;border-color:rgba(255,255,255,.7);background:rgba(255,255,255,.07)}
+.cur.hover{width:28px;height:28px;border-color:rgba(255,255,255,.8);background:rgba(255,255,255,.08)}
 @media(pointer:coarse){.cur{display:none}}
 
 /* Utility colors still in use */

@@ -118,4 +118,20 @@
       if (e.target.closest(hoverTargets)) cur.classList.remove("hover");
     });
   }
+
+  // Magnetic Effect for Buttons & Links
+  if (window.matchMedia("(pointer:fine)").matches) {
+    const magnetics = document.querySelectorAll('.btn, .nav-link, .case-back');
+    magnetics.forEach(mag => {
+      mag.addEventListener('mousemove', (e) => {
+        const rect = mag.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        mag.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px) scale(1.02)`;
+      });
+      mag.addEventListener('mouseleave', () => {
+        mag.style.transform = '';
+      });
+    });
+  }
 })();
