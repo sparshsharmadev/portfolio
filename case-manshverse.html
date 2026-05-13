@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manshverse — Case Study | Sparsh Sharma</title>
+  <meta name="description" content="How I built a multi-model AI routing platform serving 45+ historical personas.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="case-style.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon.png">
+</head>
+<body>
+
+  <div class="cur" id="cur" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <div class="case-toolbar">
+    <a href="index.html#work" class="case-back">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to portfolio
+    </a>
+  </div>
+
+  <main class="case-main">
+    <article class="case-article">
+
+      <header class="case-header">
+        <span class="case-tag">Case Study</span>
+        <h1 class="case-title orange">Manshverse</h1>
+        <p class="case-subtitle">Multi-model AI platform. Smart routing across Groq and Gemini, deep reasoning engine, and 45+ historical personas.</p>
+        <div class="case-meta">
+          <span>React · Vite · Firebase · Groq API · Gemini API · UPI Gateway</span>
+          <a href="https://manshverse.site" target="_blank" rel="noopener noreferrer" class="case-link">Live site &#x2197;</a>
+        </div>
+      </header>
+
+      <section class="case-section">
+        <h2 class="case-h2">The Problem</h2>
+        <p>The AI wrapper market is incredibly saturated. I wanted to build an AI platform that went beyond simple chat completions by offering distinct, deeply crafted personas (like Einstein, Oppenheimer, and Sherlock) that actually retained their character nuances across long contexts. Furthermore, I needed to implement a cost-effective routing engine that could decide when to use lightning-fast models (via Groq) versus high-context reasoning models (via Gemini).</p>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2">Architecture</h2>
+        <p>The system is split into three core layers:</p>
+
+        <div class="case-arch">
+          <div class="case-arch-item">
+            <h3>Intelligent Routing Engine</h3>
+            <p>Instead of hardcoding a single LLM provider, Manshverse uses an abstraction layer that intercepts user prompts. For short, latency-sensitive conversational queries, the engine routes the request to Groq (Llama-3), returning tokens at ~800 tokens/sec. For complex analytical queries requiring deeper context windows, it seamlessly switches to Gemini Pro. This hybrid approach drops operational costs by 60% while maximizing perceived performance.</p>
+          </div>
+          <div class="case-arch-item">
+            <h3>Persona System & Memory</h3>
+            <p>I engineered 45+ distinct system prompt frameworks. To maintain character consistency without blowing up the context window, I implemented a rolling context buffer using Firebase. The system retains the last 15 exchanges fully, while summarizing older context into a dense memory block that gets prepended to the system prompt dynamically.</p>
+          </div>
+          <div class="case-arch-item">
+            <h3>Subscription & UPI Gateway</h3>
+            <p>The platform is monetized via a custom billing system integrated with a UPI gateway for Indian users. I built a secure webhook listener that verifies payment signatures and automatically upgrades the user's Firebase claim token, unlocking premium models and lifting rate limits without requiring a manual refresh.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2">The Hardest Problems</h2>
+        <h3 class="case-h3">1. Token Streaming State</h3>
+        <p>Handling Server-Sent Events (SSE) for streaming text across different provider APIs was challenging. Groq's stream format differs from Gemini's. I wrote a unified streaming adapter that standardizes the chunks into a consistent readable stream format so the React frontend only has to manage one type of state update.</p>
+        
+        <h3 class="case-h3">2. Web/Android Code Sharing</h3>
+        <p>I wanted to ship an Android app without rewriting the logic. I utilized a monolithic approach where the core AI networking and state management hooks are extracted, allowing me to compile the web app into an APK wrapped with native bridges for push notifications and local storage.</p>
+      </section>
+
+    </article>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <span>&copy; 2026 Sparsh Sharma</span>
+      <span>Built from scratch. Bangalore, India.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

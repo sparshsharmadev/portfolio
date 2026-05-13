@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conduit — Case Study | Sparsh Sharma</title>
+  <meta name="description" content="How I built a secure, real-time messaging application from scratch.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="case-style.css">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon.png">
+</head>
+<body>
+
+  <div class="cur" id="cur" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <div class="case-toolbar">
+    <a href="index.html#work" class="case-back">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to portfolio
+    </a>
+  </div>
+
+  <main class="case-main">
+    <article class="case-article">
+
+      <header class="case-header">
+        <span class="case-tag">Case Study</span>
+        <h1 class="case-title purple">Conduit</h1>
+        <p class="case-subtitle">Encrypted realtime messaging app — socket-based, persistent conversation history, JWT auth, and mobile-native gestures.</p>
+        <div class="case-meta">
+          <span>React Native · WebSockets · Node.js · Express · MongoDB · JWT</span>
+        </div>
+      </header>
+
+      <section class="case-section">
+        <h2 class="case-h2">The Problem</h2>
+        <p>Building a chat app is a classic full-stack rite of passage, but I wanted to build one that felt like a production-grade product, not a tutorial. This meant going beyond simple socket broadcasts. I needed to implement persistent storage, secure JWT-based authentication, read receipts, typing indicators, and a completely seamless mobile-native gesture experience.</p>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2">Architecture</h2>
+        <p>The system is split into three core layers:</p>
+
+        <div class="case-arch">
+          <div class="case-arch-item">
+            <h3>Real-Time Socket Layer</h3>
+            <p>Built using Socket.io over a Node.js backend, the real-time layer handles message delivery, typing states, and online presence. To prevent unauthorized broadcasts, every socket connection undergoes a JWT handshake during the initial upgrade request. If the token is invalid or expired, the connection is instantly rejected.</p>
+          </div>
+          <div class="case-arch-item">
+            <h3>Data Persistence</h3>
+            <p>Messages are written to a MongoDB cluster. Instead of blocking the socket event to wait for database confirmation, Conduit uses optimistic UI updates. The frontend instantly renders the message with a "sending" state. Asynchronously, the backend writes to the DB, assigns a permanent ID, and broadcasts the delivery receipt back to the client.</p>
+          </div>
+          <div class="case-arch-item">
+            <h3>Mobile-Native Frontend</h3>
+            <p>The frontend was built with React Native. I focused heavily on gesture-based interactions, like swipe-to-reply and smooth keyboard-avoiding views. All animations are offloaded to the native UI thread using Reanimated, ensuring 60fps performance even on mid-range Android devices.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="case-section">
+        <h2 class="case-h2">The Hardest Problems</h2>
+        <h3 class="case-h3">1. Offline State Syncing</h3>
+        <p>Handling dropped connections was incredibly tricky. If a user loses internet, sends a message, and reconnects, the message needs to sync. I built a local SQLite queue on the device. When the WebSocket emits a "connect" event, the app flushes the local queue, sending any pending messages to the server in chronological order.</p>
+        
+        <h3 class="case-h3">2. JWT Security & Refresh Rotation</h3>
+        <p>Standard JWTs are vulnerable if stolen. I implemented a strict short-lived access token (15 mins) and long-lived refresh token (7 days) architecture. Refresh tokens are stored in secure, HttpOnly cookies (on web) and encrypted keystores (on mobile), ensuring the app remains secure against XSS attacks.</p>
+      </section>
+
+    </article>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <span>&copy; 2026 Sparsh Sharma</span>
+      <span>Built from scratch. Bangalore, India.</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

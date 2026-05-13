@@ -204,4 +204,60 @@
       termOverlay.classList.remove('active');
     });
   }
+
+  // Sound Design
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  let soundEnabled = false;
+
+  const playSound = () => {
+    if (!soundEnabled || audioCtx.state === 'suspended') return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.03);
+    gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
+    
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.03);
+  };
+
+  document.addEventListener('mouseover', (e) => {
+    if (e.target.closest('a, button, .card, .ticket, .exp-block, .cred-card')) {
+      playSound();
+    }
+  });
+
+  const soundToggle = document.getElementById('sound-toggle');
+  const soundState = document.getElementById('sound-state');
+  if (soundToggle) {
+    soundToggle.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      soundState.textContent = soundEnabled ? 'ON' : 'OFF';
+      if (soundEnabled && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    });
+  }
+
+  // Page Transitions
+  document.querySelectorAll('a[href]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      // Ignore external links, anchors, and blank targets
+      if (href.startsWith('http') || href.startsWith('#') || link.target === '_blank') return;
+      
+      e.preventDefault();
+      document.body.classList.add('page-exit');
+      
+      setTimeout(() => {
+        window.location.href = href;
+      }, 300);
+    });
+  });
+
 })();
