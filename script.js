@@ -207,7 +207,19 @@
 
   // Sound Design
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  let soundEnabled = false;
+  let soundEnabled = true;
+
+  const unlockAudio = () => {
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    document.removeEventListener('click', unlockAudio);
+    document.removeEventListener('keydown', unlockAudio);
+    document.removeEventListener('mouseover', unlockAudio);
+  };
+  document.addEventListener('click', unlockAudio, { passive: true });
+  document.addEventListener('keydown', unlockAudio, { passive: true });
+  document.addEventListener('mouseover', unlockAudio, { passive: true });
 
   const playSound = () => {
     if (!soundEnabled || audioCtx.state === 'suspended') return;

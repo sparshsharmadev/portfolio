@@ -373,7 +373,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 
 /* Page Transitions */
 body { animation: page-in 0.4s var(--ease) forwards; }
-@keyframes page-in { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes page-in { 0% { opacity: 0; } 100% { opacity: 1; } }
 body.page-exit { animation: page-out 0.3s var(--ease) forwards; }
-@keyframes page-out { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-10px); } }
+@keyframes page-out { 0% { opacity: 1; } 100% { opacity: 0; } }
 
