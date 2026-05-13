@@ -46,7 +46,8 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .wrap{width:min(var(--max),calc(100% - 2.5rem));margin:0 auto}
 
 /* Navigation Component */
-.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:.75rem 0;
+.nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:.75rem 0;
+  transform:translateZ(0);-webkit-transform:translateZ(0);
   transition:background .35s var(--ease),backdrop-filter .35s}
 .nav.scrolled{background:rgba(0,0,0,.82);backdrop-filter:blur(24px) saturate(1.4)}
 
@@ -298,8 +299,9 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
   .creds-grid{gap:.75rem}
 
   /* Mobile nav */
-  .nav-burger{display:flex}
-  .nav-menu{position:fixed;top:0;left:0;right:0;bottom:0;
+  .nav{padding:1rem 0}
+  .nav-burger{display:flex;position:relative;z-index:101}
+  .nav-menu{position:fixed;top:0;left:0;width:100%;height:100dvh;
     flex-direction:column;align-items:center;justify-content:center;gap:1rem;
     background:rgba(0,0,0,.96);backdrop-filter:blur(30px);
     opacity:0;pointer-events:none;transition:opacity .3s var(--ease);z-index:90}
