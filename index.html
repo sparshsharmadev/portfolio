@@ -441,56 +441,38 @@
           <h2 class="sect-title">Stack &amp; Capabilities</h2>
         </header>
 
-        <div class="stack-grid" data-reveal>
-          <div class="stack-col">
-            <h3 class="stack-label">Frontend</h3>
-            <ul class="stack-list">
-              <li>React / Next.js</li>
-              <li>React Native / Expo</li>
-              <li>Three.js / WebGL / R3F</li>
-              <li>GSAP / Framer Motion</li>
-              <li>Vite / Webpack</li>
-              <li>TypeScript</li>
-              <li>Tailwind / Vanilla CSS</li>
-              <li>HTML5 Canvas / SVG</li>
-            </ul>
+        <div class="marquee-container" data-reveal>
+          <div class="marquee">
+            <span>React</span><span class="dot">&bull;</span>
+            <span>TypeScript</span><span class="dot">&bull;</span>
+            <span>Node.js</span><span class="dot">&bull;</span>
+            <span>PostgreSQL</span><span class="dot">&bull;</span>
+            <span>Three.js</span><span class="dot">&bull;</span>
+            <span>WebSockets</span><span class="dot">&bull;</span>
+            <span>Tailwind</span><span class="dot">&bull;</span>
+            <span>React</span><span class="dot">&bull;</span>
+            <span>TypeScript</span><span class="dot">&bull;</span>
+            <span>Node.js</span><span class="dot">&bull;</span>
+            <span>PostgreSQL</span><span class="dot">&bull;</span>
+            <span>Three.js</span><span class="dot">&bull;</span>
+            <span>WebSockets</span><span class="dot">&bull;</span>
+            <span>Tailwind</span><span class="dot">&bull;</span>
           </div>
-          <div class="stack-col">
-            <h3 class="stack-label">Backend</h3>
-            <ul class="stack-list">
-              <li>Node.js / Express</li>
-              <li>Firebase / Firestore</li>
-              <li>Prisma ORM</li>
-              <li>PostgreSQL / Neon</li>
-              <li>WebSockets / Socket.io</li>
-              <li>REST APIs</li>
-              <li>JWT / OAuth 2.0</li>
-              <li>Cloud Functions</li>
-            </ul>
-          </div>
-          <div class="stack-col">
-            <h3 class="stack-label">AI & Data</h3>
-            <ul class="stack-list">
-              <li>Groq API</li>
-              <li>Gemini API</li>
-              <li>OpenAI API</li>
-              <li>Prompt engineering</li>
-              <li>SGP4 / TLE propagation</li>
-              <li>Kalman filters</li>
-              <li>Realtime data pipelines</li>
-            </ul>
-          </div>
-          <div class="stack-col">
-            <h3 class="stack-label">DevOps & Tools</h3>
-            <ul class="stack-list">
-              <li>Vercel / Netlify</li>
-              <li>EAS Build / Expo</li>
-              <li>Git / GitHub</li>
-              <li>CI/CD pipelines</li>
-              <li>Firebase Hosting</li>
-              <li>Linux / Shell</li>
-              <li>Figma</li>
-            </ul>
+        </div>
+        <div class="marquee-container marquee-reverse" data-reveal style="margin-top: 1rem">
+          <div class="marquee">
+            <span>Firebase</span><span class="dot">&bull;</span>
+            <span>Vite</span><span class="dot">&bull;</span>
+            <span>Next.js</span><span class="dot">&bull;</span>
+            <span>Groq AI</span><span class="dot">&bull;</span>
+            <span>Linux</span><span class="dot">&bull;</span>
+            <span>Prisma</span><span class="dot">&bull;</span>
+            <span>Firebase</span><span class="dot">&bull;</span>
+            <span>Vite</span><span class="dot">&bull;</span>
+            <span>Next.js</span><span class="dot">&bull;</span>
+            <span>Groq AI</span><span class="dot">&bull;</span>
+            <span>Linux</span><span class="dot">&bull;</span>
+            <span>Prisma</span><span class="dot">&bull;</span>
           </div>
         </div>
       </div>
@@ -572,6 +554,22 @@
       <span>Built from scratch. Bangalore, India.</span>
     </div>
   </footer>
+
+  <div id="cmd-terminal" class="terminal-overlay">
+    <div class="terminal-window">
+      <div class="term-header">
+        <span class="term-title">manshbase-shell ~ zsh</span>
+        <span class="term-close">ESC</span>
+      </div>
+      <div class="term-body" id="term-output">
+        <div class="term-line">System initialized. Type 'help' to see available commands.</div>
+      </div>
+      <div class="term-input-line">
+        <span class="term-prompt">guest@manshverse:~$</span>
+        <input type="text" id="term-input" class="term-input" autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

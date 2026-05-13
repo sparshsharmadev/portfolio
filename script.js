@@ -134,4 +134,74 @@
       });
     });
   }
+
+  // Terminal Logic
+  const termOverlay = document.getElementById('cmd-terminal');
+  const termInput = document.getElementById('term-input');
+  const termOutput = document.getElementById('term-output');
+
+  if (termOverlay) {
+    const commands = {
+      'help': 'Available commands: about, skills, echo <msg>, sudo, clear, exit',
+      'about': 'Sparsh Sharma - 17yo Full-Stack Dev. Building high-performance systems from scratch.',
+      'skills': 'Frontend: React, Next.js, Three.js. Backend: Node, Postgres, WebSockets. Design: Brutalist/Minimal.',
+      'sudo': 'Nice try, but this is ManshBase. Access restricted.',
+      'clear': 'CLEAR'
+    };
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey && e.key === 'k') || (e.ctrlKey && e.key === 'k') || (e.key === '/' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA')) {
+        e.preventDefault();
+        termOverlay.classList.toggle('active');
+        if (termOverlay.classList.contains('active')) termInput.focus();
+      }
+      if (e.key === 'Escape' && termOverlay.classList.contains('active')) {
+        termOverlay.classList.remove('active');
+      }
+    });
+
+    termInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const val = termInput.value.trim();
+        const lowerVal = val.toLowerCase();
+        termInput.value = '';
+        if (val === '') return;
+        
+        appendLine(`guest@manshverse:~$ ${val}`, '#fff');
+        
+        if (lowerVal === 'clear') {
+          termOutput.innerHTML = '';
+          return;
+        }
+        if (lowerVal === 'exit') {
+          termOverlay.classList.remove('active');
+          return;
+        }
+        if (lowerVal.startsWith('echo ')) {
+          appendLine(val.substring(5), '#0f0');
+          termOutput.scrollTop = termOutput.scrollHeight;
+          return;
+        }
+        
+        if (commands[lowerVal]) {
+          appendLine(commands[lowerVal], '#0f0');
+        } else {
+          appendLine(`zsh: command not found: ${val}. Type 'help' for available commands.`, '#f44');
+        }
+        termOutput.scrollTop = termOutput.scrollHeight;
+      }
+    });
+
+    function appendLine(text, color) {
+      const div = document.createElement('div');
+      div.className = 'term-line';
+      div.style.color = color;
+      div.textContent = text;
+      termOutput.appendChild(div);
+    }
+
+    document.querySelector('.term-close').addEventListener('click', () => {
+      termOverlay.classList.remove('active');
+    });
+  }
 })();
