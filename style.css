@@ -163,6 +163,13 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
   background:linear-gradient(145deg,#060606,#081210)}
 .card-hero:hover{border-color:rgba(0,255,204,.22)}
 
+.card-private{border:1px dashed var(--border-h);background:transparent;padding:2.5rem;border-radius:4px;box-shadow:none!important}
+.card-private:hover{border-style:solid;border-color:var(--purple);background:rgba(167,139,250,.02)}
+.card-private .card-title{font-family:var(--mono);text-transform:uppercase;font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:0}
+
+.clients-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.clients-grid .card{margin-bottom:0}
+
 .card-badge-row{display:flex;gap:.4rem;margin-bottom:.9rem;position:relative;z-index:2}
 .card-badge{padding:.25rem .6rem;border-radius:100px;border:1px solid var(--border);
   font-family:var(--mono);font-size:.62rem;color:var(--t3);letter-spacing:.07em;text-transform:uppercase}
@@ -242,7 +249,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 .cred-issuer{font-family:var(--mono);font-size:.65rem;font-weight:600;
   letter-spacing:.18em;color:var(--cyan);margin-bottom:.6rem}
 .cred-name{font-size:1.3rem;font-weight:700;letter-spacing:-.03em;margin-bottom:.6rem}
-.cred-detail{color:var(--t2);font-size:.85rem;line-height:1.6;max-width:600px;margin-bottom:.8rem}
+.cred-detail{color:var(--t2);font-size:.85rem;line-height:1.6;max-width:600px}
 .cred-date{font-family:var(--mono);font-size:.65rem;color:var(--t3);letter-spacing:.06em}
 
 /* Currently Building Strip */
@@ -273,6 +280,7 @@ button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 
   .card-feats{grid-template-columns:1fr}
   .card-stats{max-width:100%}
+  .clients-grid{grid-template-columns:1fr}
   .stack-grid{grid-template-columns:1fr 1fr}
   .contact-grid{grid-template-columns:1fr}
   .sect-sub{margin-left:0;width:100%}
