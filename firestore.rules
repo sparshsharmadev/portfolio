@@ -1,0 +1,31 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Anyone can create a new inquiry (form submission)
+    // Requires the essential fields to be present
+    match /portfolio-requests/{requestId} {
+      // Anyone can create an inquiry
+      allow create: if request.resource.data.keys().hasAll(['name', 'email', 'projectType', 'description', 'trackingId', 'status'])
+                    && request.resource.data.name is string
+                    && request.resource.data.email is string;
+
+      // Allow reading a single doc when querying by trackingId (for client status tracker)
+      allow list: if request.query.limit != null && request.query.limit <= 1;
+
+      // Admin only: read all, update, delete
+      allow read, update, delete: if request.auth != null && request.auth.token.email == 'sparshsharmadev@gmail.com';
+    }
+
+    // Portfolio config (availability status) — admin write, public read
+    match /portfolio-config/{doc} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.email == 'sparshsharmadev@gmail.com';
+    }
+
+    // Analytics — open read/write for now
+    match /portfolio-analytics/{doc} {
+      allow read, write: if request.auth != null && request.auth.token.email == 'sparshsharmadev@gmail.com';
+    }
+  }
+}
