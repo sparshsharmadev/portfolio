@@ -29,7 +29,7 @@ html{scroll-behavior:smooth;scroll-padding-top:5rem;-webkit-font-smoothing:antia
 body{background:#000;color:var(--t1);font-family:var(--sans);font-size:15px;line-height:1.6;overflow-x:hidden}
 @media(pointer:fine){body,body *{cursor:none!important}}
 img{display:block;max-width:100%}
-a{color:inherit;text-decoration:none}
+a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:rgba(0,255,204,.15)}
 ul{list-style:none}
 button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 ::selection{background:rgba(0,255,204,.18);color:#fff}
@@ -113,7 +113,8 @@ main,header.nav,footer{position:relative;z-index:1}
   padding:.5rem 1.1rem .5rem .7rem;border:1px solid rgba(255,255,255,.08);border-radius:100px;
   background:rgba(255,255,255,.03);font-family:var(--mono);font-size:.72rem;color:var(--t2);
   letter-spacing:.05em;transition:all .3s var(--ease);text-decoration:none;
-  cursor:pointer;backdrop-filter:blur(10px);will-change:transform}
+  cursor:pointer;backdrop-filter:blur(10px);will-change:transform;
+  position:relative;z-index:5;touch-action:manipulation}
 .hero-badge:hover{background:rgba(255,255,255,.06);border-color:rgba(0,255,204,.35);color:var(--cyan);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,255,204,.15)}
 
 .hero-title{font-size:clamp(3.2rem,8.5vw,7rem);font-weight:800;line-height:.88;letter-spacing:-.07em}
@@ -135,10 +136,11 @@ main,header.nav,footer{position:relative;z-index:1}
 /* Button UI */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;
   padding:.7rem 1.4rem;border-radius:100px;font-size:.85rem;font-weight:600;
-  letter-spacing:-.01em;transition:transform .25s var(--ease),box-shadow .25s,background .25s,border-color .25s;cursor:pointer}
+  letter-spacing:-.01em;transition:transform .25s var(--ease),box-shadow .25s,background .25s,border-color .25s;cursor:pointer;
+  position:relative;z-index:5;touch-action:manipulation;-webkit-tap-highlight-color:rgba(0,255,204,.15)}
 .btn-fill{background:var(--cyan);color:#000;border:1px solid var(--cyan);font-weight:700;will-change:transform}
 .btn-fill:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--cyan-g)}
-.btn-line{background:transparent;color:var(--t2);border:1px solid var(--border)}
+.btn-line{background:transparent;color:var(--t2);border:1px solid var(--border);text-decoration:none}
 .btn-line:hover{color:var(--t1);border-color:var(--border-h);background:rgba(255,255,255,.03)}
 .btn-line svg{opacity:.5}
 .btn-big{padding:.9rem 2rem;font-size:.92rem}
@@ -253,7 +255,8 @@ main,header.nav,footer{position:relative;z-index:1}
 .contact-links{display:flex;flex-direction:column;gap:1px;background:var(--border);
   border:1px solid var(--border);border-radius:14px;overflow:hidden}
 .cl-item{padding:1.1rem 1.3rem;background:var(--s1);display:flex;
-  justify-content:space-between;align-items:center;transition:background .25s}
+  justify-content:space-between;align-items:center;transition:background .25s;
+  position:relative;z-index:5;touch-action:manipulation;-webkit-tap-highlight-color:rgba(0,255,204,.15)}
 .cl-item:hover{background:var(--s2)}
 .cl-label{font-family:var(--mono);font-size:.62rem;color:var(--t3);
   letter-spacing:.1em;text-transform:uppercase}
@@ -722,27 +725,45 @@ html.skip-intro .hero-btns[data-hero-reveal] { animation-delay: 0.4s !important;
   align-items: flex-end;
 }
 .pcard-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  background: rgba(255, 255, 255, 0.015);
   font-family: var(--mono);
   font-size: 0.68rem;
   color: var(--t1);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border: 1px solid var(--border);
-  padding: 0.55rem 1.1rem;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.01);
-  transition: all 0.25s var(--ease);
   text-align: center;
+  text-decoration: none;
   width: 100%;
+  cursor: pointer;
+  position: relative;
+  z-index: 5;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0,255,204,.2);
+  transition: border-color 0.25s var(--ease), background 0.25s var(--ease), color 0.25s var(--ease), transform 0.25s var(--ease);
 }
 .pcard-link:hover {
-  border-color: var(--border-h);
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  border-color: var(--cyan);
+  background: rgba(0, 255, 204, 0.06);
+  color: var(--cyan);
+  transform: translateY(-2px);
+}
+.pcard-link:active {
+  transform: scale(0.97);
 }
 .pcard-link-sec {
   background: transparent;
-  color: var(--t2);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+.pcard-link-sec:hover {
+  border-color: var(--border-h);
+  background: rgba(255, 255, 255, 0.03);
+  color: #fff;
 }
 .pcard-accent {
   position: absolute;
@@ -931,6 +952,8 @@ html.skip-intro .hero-btns[data-hero-reveal] { animation-delay: 0.4s !important;
   }
   .pcard-right {
     grid-column: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
   .pcard-left {
     flex-direction: row;
@@ -941,6 +964,11 @@ html.skip-intro .hero-btns[data-hero-reveal] { animation-delay: 0.4s !important;
     flex-direction: row;
     flex-wrap: wrap;
   }
+  .pcard-link {
+    width: auto;
+    flex: 1;
+    min-width: fit-content;
+  }
   .clients-grid {
     grid-template-columns: 1fr;
   }
@@ -948,11 +976,31 @@ html.skip-intro .hero-btns[data-hero-reveal] { animation-delay: 0.4s !important;
     flex-direction: column;
     gap: 2.5rem;
   }
+  .hire-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .hire-sidebar {
+    position: static;
+  }
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
 }
 @media(max-width:600px){
   .chat-widget{bottom:1rem;right:1rem}
   .chat-panel{width:calc(100vw - 2rem);height:320px;max-height:50vh}
   .pill-select{gap:.3rem}
+  .pcard-link {
+    padding: 0.55rem 0.9rem;
+    font-size: 0.62rem;
+  }
+  .contact-links {
+    border-radius: 10px;
+  }
+  .cl-item {
+    padding: 0.85rem 1rem;
+  }
 }
 
 /* Past Experience timeline styling */
@@ -1049,13 +1097,15 @@ html.skip-intro .hero-btns[data-hero-reveal] { animation-delay: 0.4s !important;
   color: var(--t3);
   font-family: var(--mono);
 }
-.lab-card-tags {
+.lab-card-tags,
+.lab-card-pills {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
   margin-top: auto;
 }
-.lab-card-tag {
+.lab-card-tag,
+.lab-card-pills span {
   font-family: var(--mono);
   font-size: 0.58rem;
   color: var(--t3);
@@ -1066,7 +1116,8 @@ html.skip-intro .hero-btns[data-hero-reveal] { animation-delay: 0.4s !important;
   border-radius: 3px;
   transition: all 0.2s;
 }
-.lab-card-tag:hover {
+.lab-card-tag:hover,
+.lab-card-pills span:hover {
   border-color: rgba(255, 255, 255, 0.12);
   color: var(--t2);
 }
