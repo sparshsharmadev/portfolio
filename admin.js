@@ -36,15 +36,29 @@
     const waitForAuth = setInterval(() => {
       if (window._auth) {
         clearInterval(waitForAuth);
+        
+        let hasInitialized = false;
         window._auth.onAuthStateChanged(user => {
           if (user && user.email === 'sparshsharmadev@gmail.com') {
             adminWrap.classList.add('visible');
             initAdmin();
           } else {
-            // Session token expired or wrong account — force re-login
-            sessionStorage.removeItem('admin-auth');
-            termGate.style.display = 'flex';
-            termInput.focus();
+            // Give Firebase a brief moment to restore persistent session from IndexedDB
+            if (!hasInitialized) {
+              hasInitialized = true;
+              setTimeout(() => {
+                if (!window._auth.currentUser) {
+                  sessionStorage.removeItem('admin-auth');
+                  termGate.style.display = 'flex';
+                  termInput.focus();
+                }
+              }, 1500);
+            } else {
+              // Truly logged out or wrong account
+              sessionStorage.removeItem('admin-auth');
+              termGate.style.display = 'flex';
+              termInput.focus();
+            }
           }
         });
       }
@@ -127,7 +141,7 @@
           pinInput.value = '';
         }
       }).catch((err) => {
-        pinErr.textContent = 'Backend Auth failed (Check Firebase Console).';
+        pinErr.textContent = 'Backend Auth failed: ' + err.message;
         pinInput.value = '';
         console.error(err);
       });

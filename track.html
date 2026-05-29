@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Project — Sparsh Sharma</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#000;--s1:#060606;--s2:#0c0c0c;--border:rgba(255,255,255,.07);--border-h:rgba(255,255,255,.15);--t1:#ebebeb;--t2:rgba(255,255,255,.55);--t3:rgba(255,255,255,.28);--cyan:#00ffcc;--green:#4ade80;--amber:#f59e0b;--purple:#a78bfa;--red:#f87171;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',monospace;--ease:cubic-bezier(.16,1,.3,1)}
+    html{-webkit-font-smoothing:antialiased}
+    body{background:var(--bg);color:var(--t1);font-family:var(--sans);font-size:15px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:4rem 1.5rem}
+    a{color:inherit;text-decoration:none}
+    .back{font-family:var(--mono);font-size:.72rem;color:var(--t3);letter-spacing:.06em;margin-bottom:3rem;display:flex;align-items:center;gap:.4rem;transition:color .2s}
+    .back:hover{color:var(--t1)}
+    .track-wrap{width:100%;max-width:540px}
+    .track-brand{font-family:var(--mono);font-size:.65rem;letter-spacing:.15em;color:var(--t3);text-transform:uppercase;margin-bottom:2rem}
+    .track-title{font-size:clamp(1.8rem,5vw,2.4rem);font-weight:700;letter-spacing:-.04em;margin-bottom:.4rem}
+    .track-sub{color:var(--t2);font-size:.9rem;margin-bottom:2rem}
+    .lookup-row{display:flex;gap:.6rem;margin-bottom:2.5rem}
+    .tid-input{flex:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:.75rem 1rem;color:var(--t1);font-family:var(--mono);font-size:.9rem;letter-spacing:.06em;outline:none;transition:border-color .2s}
+    .tid-input:focus{border-color:rgba(0,255,204,.35)}
+    .tid-input::placeholder{color:var(--t3);letter-spacing:.02em;font-size:.8rem}
+    .lookup-btn{background:var(--cyan);color:#000;border:none;border-radius:10px;padding:.75rem 1.5rem;font-weight:700;font-size:.85rem;cursor:pointer;white-space:nowrap;transition:opacity .2s}
+    .lookup-btn:hover{opacity:.85}
+    /* Result panel */
+    .result-panel{display:none;border:1px solid var(--border);border-radius:16px;background:var(--s1);overflow:hidden;animation:fade-in .4s var(--ease)}
+    @keyframes fade-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .result-top{padding:1.5rem;border-bottom:1px solid var(--border)}
+    .result-name{font-size:1.1rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.2rem}
+    .result-type{font-family:var(--mono);font-size:.72rem;color:var(--t3);letter-spacing:.04em}
+    .result-tid{font-family:var(--mono);font-size:.68rem;color:var(--t3);margin-top:.5rem}
+    .status-steps{padding:1.5rem;display:flex;flex-direction:column;gap:0}
+    .sstep{display:flex;align-items:flex-start;gap:.85rem;position:relative;padding-bottom:1.5rem}
+    .sstep:last-child{padding-bottom:0}
+    .sstep::before{content:'';position:absolute;left:11px;top:24px;bottom:0;width:1px;background:var(--border)}
+    .sstep:last-child::before{display:none}
+    .sstep-dot{width:23px;height:23px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0;transition:all .3s;background:var(--s2)}
+    .sstep.done .sstep-dot{border-color:var(--t2);background:var(--s2);color:var(--t1)}
+    .sstep.active .sstep-dot{border-color:var(--cyan);background:rgba(0,255,204,.15);color:var(--cyan)}
+    .sstep.done .sstep-dot::after,.sstep.active .sstep-dot::after{content:'✓';font-size:.6rem}
+    .sstep-info{}
+    .sstep-label{font-size:.88rem;font-weight:600;color:var(--t2)}
+    .sstep.active .sstep-label{color:var(--t1)}
+    .sstep-desc{font-size:.78rem;color:var(--t3);margin-top:.15rem}
+    .err-msg{color:var(--red);font-family:var(--mono);font-size:.78rem;padding:1rem;border:1px solid rgba(248,113,113,.2);border-radius:10px;background:rgba(248,113,113,.04)}
+    .footer-link{margin-top:3rem;font-family:var(--mono);font-size:.68rem;color:var(--t3);text-align:center}
+    .footer-link a{color:var(--t2);transition:color .2s}.footer-link a:hover{color:var(--t1)}
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back">← Back to portfolio</a>
+
+  <div class="track-wrap">
+    <div class="track-brand">sparshsharma.dev</div>
+    <h1 class="track-title">Track your project</h1>
+    <p class="track-sub">Enter your tracking ID to check the status of your inquiry.</p>
+
+    <div class="lookup-row">
+      <input class="tid-input" id="tid-input" type="text" placeholder="e.g. SSD-2026-4382" autocomplete="off" spellcheck="false">
+      <button class="lookup-btn" id="lookup-btn">Check status</button>
+    </div>
+
+    <div id="result-area"></div>
+  </div>
+
+  <div class="footer-link">Back to <a href="index.html">portfolio</a> · <a href="index.html#contact">Submit new inquiry</a></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script>
+    const db = window._db || firebase.firestore();
+
+    const STEPS = [
+      { key: 'new',           label: 'Received',       desc: 'Your inquiry has been submitted and is in the queue.' },
+      { key: 'reviewing',     label: 'Under Review',   desc: "Sparsh is reading your brief and scoping the work." },
+      { key: 'in_discussion', label: 'In Discussion',  desc: 'Sparsh is interested. Expect a message soon.' },
+      { key: 'accepted',      label: 'Accepted',        desc: 'Project confirmed. Work is starting soon.' },
+      { key: 'completed',     label: 'Completed',       desc: 'Project delivered successfully.' },
+    ];
+    const DECLINED = { key: 'declined', label: 'Declined', desc: 'This project was not a fit at this time.' };
+
+    async function doLookup() {
+      const tid = document.getElementById('tid-input').value.trim().toUpperCase();
+      const area = document.getElementById('result-area');
+      if (!tid) return;
+      area.innerHTML = '<p style="color:var(--t3);font-family:var(--mono);font-size:.78rem">Looking up...</p>';
+      try {
+        const snap = await db.collection('portfolio-requests').where('trackingId', '==', tid).limit(1).get();
+        if (snap.empty) {
+          area.innerHTML = '<div class="err-msg">No project found with tracking ID <strong>' + tid + '</strong>. Double-check the ID from your confirmation.</div>';
+          return;
+        }
+        const d = snap.docs[0].data();
+        const steps = d.status === 'declined' ? [...STEPS.slice(0,2), DECLINED] : STEPS;
+        const activeIdx = steps.findIndex(s => s.key === d.status);
+
+        const stepsHtml = steps.map((s, i) => {
+          const isDone = i < activeIdx;
+          const isActive = i === activeIdx;
+          return `<div class="sstep ${isDone?'done':''} ${isActive?'active':''}">
+            <div class="sstep-dot"></div>
+            <div class="sstep-info">
+              <div class="sstep-label">${s.label}</div>
+              <div class="sstep-desc">${isActive ? s.desc : (isDone ? 'Complete' : 'Pending')}</div>
+            </div>
+          </div>`;
+        }).join('');
+
+        const date = d.createdAt?.toDate ? d.createdAt.toDate().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }) : '';
+        area.innerHTML = `
+          <div class="result-panel" style="display:block">
+            <div class="result-top">
+              <div class="result-name">${esc(d.name)}'s project</div>
+              <div class="result-type">${esc(d.projectType)} · ${esc(d.budget)} · ${esc(d.timeline)}</div>
+              <div class="result-tid">${d.trackingId} · Submitted ${date}</div>
+            </div>
+            <div class="status-steps">${stepsHtml}</div>
+          </div>`;
+      } catch (err) {
+        area.innerHTML = '<div class="err-msg">Lookup failed. Check your connection and try again.</div>';
+      }
+    }
+
+    function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+
+    document.getElementById('lookup-btn').addEventListener('click', doLookup);
+    document.getElementById('tid-input').addEventListener('keydown', e => { if(e.key==='Enter') doLookup(); });
+
+    // Auto-lookup from URL param
+    const urlTid = new URLSearchParams(window.location.search).get('id');
+    if (urlTid) { document.getElementById('tid-input').value = urlTid; doLookup(); }
+  </script>
+</body>
+</html>

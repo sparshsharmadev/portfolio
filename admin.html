@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — sparshsharma.dev</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+
+  <!-- Terminal Gate -->
+  <div class="terminal-overlay" id="terminal-gate" style="display: flex;">
+    <div class="terminal-window">
+      <div class="term-header">
+        <div class="term-dots"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div></div>
+        <span class="term-title">admin-shell ~ zsh</span>
+      </div>
+      <div class="term-body" id="admin-term-output">
+        <div class="term-line">System restricted. Enter command to proceed.</div>
+      </div>
+      <div class="term-input-line">
+        <span class="term-prompt" id="admin-term-prompt">guest@sparsh-dev:~$</span>
+        <input type="text" id="admin-term-input" class="term-input" autocomplete="off" spellcheck="false" autofocus>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIN Gate -->
+  <div class="pin-gate" id="pin-gate" style="display: none;">
+    <div class="pin-box">
+      <div class="pin-logo">sparshsharma.dev</div>
+      <h1 class="pin-title">Admin Access</h1>
+      <p class="pin-sub">Enter your PIN to continue</p>
+      <input class="pin-input" id="pin-input" type="password" maxlength="8" placeholder="••••••••" autocomplete="off">
+      <p class="pin-err" id="pin-err"></p>
+      <button class="pin-btn" id="pin-btn">Unlock</button>
+    </div>
+  </div>
+
+  <div class="notif-banner" id="notif-banner"></div>
+
+  <div class="admin-wrap" id="admin-wrap">
+    <header class="admin-header">
+      <div class="admin-brand">SPARSH / ADMIN</div>
+      <div class="admin-meta">
+        <span class="admin-notif" id="new-count"></span>
+        <span class="admin-time" id="admin-time"></span>
+      </div>
+    </header>
+
+    <div class="admin-body">
+      <div class="stats-strip">
+        <div class="stat-card"><div class="stat-val" id="stat-total">—</div><div class="stat-label">Total Inquiries</div></div>
+        <div class="stat-card"><div class="stat-val" id="stat-new">—</div><div class="stat-label">New / Unread</div></div>
+        <div class="stat-card"><div class="stat-val" id="stat-active">—</div><div class="stat-label">Active Projects</div></div>
+        <div class="stat-card"><div class="stat-val" id="stat-pipeline">—</div><div class="stat-label">Pipeline (est.)</div></div>
+      </div>
+
+      <div class="controls-row">
+        <div class="avail-ctrl" style="flex-wrap: wrap;">
+          <span class="avail-ctrl-label">Availability</span>
+          <button class="avail-pill available" data-status="available">Available</button>
+          <button class="avail-pill limited" data-status="limited">Limited</button>
+          <button class="avail-pill booked" data-status="booked">Booked</button>
+          <input type="text" id="avail-custom-msg" class="avail-msg-input" placeholder="Custom message...">
+        </div>
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="new">New</button>
+        <button class="filter-btn" data-filter="reviewing">Reviewing</button>
+        <button class="filter-btn" data-filter="in_discussion">In Discussion</button>
+        <button class="filter-btn" data-filter="accepted">Accepted</button>
+        <button class="filter-btn" data-filter="declined">Declined</button>
+        <input class="search-input" id="search-input" type="text" placeholder="Search name or email...">
+      </div>
+
+      <div class="requests-grid" id="requests-grid">
+        <div class="empty-state" id="empty-state">Loading requests...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

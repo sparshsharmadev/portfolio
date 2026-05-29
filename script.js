@@ -5,6 +5,57 @@
   const fill = document.getElementById("scroll-fill");
   const nav = document.getElementById("nav");
 
+  // ── Parallax State ────────────────────────────────────────────────────────
+  // We wrap each parallax target in a .parallax-layer shell, and apply
+  // translateY to the shell — so we never fight the element's own
+  // CSS keyframe animation or reveal transition transform.
+  const parallaxItems = [];
+
+  function wrapAndRegisterParallax(selector, speed) {
+    document.querySelectorAll(selector).forEach((el) => {
+      // Create a zero-height passthrough wrapper
+      const shell = document.createElement('div');
+      shell.className = 'parallax-layer';
+      el.parentNode.insertBefore(shell, el);
+      shell.appendChild(el);
+      // Baseline: shell's top when page first loads
+      const baseY = shell.getBoundingClientRect().top + window.scrollY;
+      parallaxItems.push({ shell, speed, baseY });
+    });
+  }
+
+  function tickParallax() {
+    const y = window.scrollY;
+    parallaxItems.forEach(({ shell, speed, baseY }) => {
+      const offset = (y - baseY) * speed;
+      shell.style.transform = `translateY(${offset.toFixed(2)}px) translateZ(0)`;
+    });
+    requestAnimationFrame(tickParallax);
+  }
+
+  // Only run parallax on desktop, respecting reduced-motion preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isDesktop = window.innerWidth > 960;
+
+  if (!prefersReducedMotion && isDesktop) {
+    // Hero elements float up slower than the page → depth illusion
+    wrapAndRegisterParallax('.hero-badge',      -0.06);
+    wrapAndRegisterParallax('.hero-title',      -0.04);
+    wrapAndRegisterParallax('.hero-sub',        -0.03);
+    wrapAndRegisterParallax('.hero-btns',       -0.02);
+
+    // Section numbers drift faster → feel like foreground
+    wrapAndRegisterParallax('.sect-num',        -0.08);
+
+    // Giant ghost numbers behind cards drift downward → deep background
+    wrapAndRegisterParallax('.card-giant-num',   0.05);
+
+    // Section sub-labels float gently
+    wrapAndRegisterParallax('.sect-sub',        -0.035);
+
+    tickParallax();
+  }
+
   function onScroll() {
     const y = window.scrollY;
     const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -50,23 +101,83 @@
     });
   });
 
-  // Reveal elements on scroll
+  // ── Staggered Reveal System ───────────────────────────────────────────────
+  //
+  // [data-reveal]          → the container; fades + slides up when in view
+  // [data-reveal-stagger]  → children inside are animated one-by-one
+  //
+  // We also auto-tag children of these containers:
+  //   .card-feats li, .card-pills span, article.card, .ticket, .cl-item
+
+  function prepareStaggerChildren() {
+    // Project cards inside sections → stagger between siblings
+    document.querySelectorAll('#work, #clients').forEach((section) => {
+      const cards = section.querySelectorAll('article.card, article.ticket');
+      cards.forEach((card, i) => {
+        card.dataset.stagger = i;
+      });
+    });
+
+    // Feature bullet lists
+    document.querySelectorAll('.card-feats').forEach((list) => {
+      list.querySelectorAll('li').forEach((li, i) => {
+        li.dataset.staggerChild = i;
+      });
+    });
+
+    // Tech pills
+    document.querySelectorAll('.card-pills').forEach((pills) => {
+      pills.querySelectorAll('span').forEach((span, i) => {
+        span.dataset.staggerChild = i;
+      });
+    });
+
+    // Contact links
+    document.querySelectorAll('.contact-links .cl-item').forEach((item, i) => {
+      item.dataset.staggerChild = i;
+    });
+
+    // Cred cards
+    document.querySelectorAll('.cred-card').forEach((card, i) => {
+      card.dataset.stagger = i;
+    });
+  }
+
+  prepareStaggerChildren();
+
   const reveals = document.querySelectorAll("[data-reveal]");
+
   if ("IntersectionObserver" in window) {
     const obs = new IntersectionObserver(
       (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("vis");
-            obs.unobserve(e.target);
-          }
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const el = entry.target;
+
+          // Stagger index on the element itself (for cards/tickets)
+          const si = el.dataset.stagger ? parseInt(el.dataset.stagger) : 0;
+          el.style.transitionDelay = `${si * 90}ms`;
+          el.classList.add("vis");
+
+          // Animate stagger-children inside this container
+          el.querySelectorAll('[data-stagger-child]').forEach((child) => {
+            const ci = parseInt(child.dataset.staggerChild) || 0;
+            // Children start after the container's own delay
+            child.style.transitionDelay = `${si * 90 + ci * 55 + 80}ms`;
+            child.classList.add('reveal-child-vis');
+          });
+
+          obs.unobserve(el);
         });
       },
-      { threshold: 0.06, rootMargin: "0px 0px -30px 0px" }
+      { threshold: 0.06, rootMargin: "0px 0px -40px 0px" }
     );
     reveals.forEach((el) => obs.observe(el));
   } else {
-    reveals.forEach((el) => el.classList.add("vis"));
+    reveals.forEach((el) => {
+      el.classList.add("vis");
+      el.querySelectorAll('[data-stagger-child]').forEach((c) => c.classList.add('reveal-child-vis'));
+    });
   }
 
   // Highlight active section nav
@@ -145,12 +256,12 @@
       'help': 'Available commands: about, skills, echo <msg>, sudo, clear, exit',
       'about': 'Sparsh Sharma - 17yo Full-Stack Dev. Building high-performance systems from scratch.',
       'skills': 'Frontend: React, Next.js, Three.js. Backend: Node, Postgres, WebSockets. Design: Brutalist/Minimal.',
-      'sudo': 'Nice try, but this is ManshBase. Access restricted.',
+      'sudo': 'Nice try. This is sparsh-dev. Access restricted.',
       'clear': 'CLEAR'
     };
 
     document.addEventListener('keydown', (e) => {
-      if ((e.metaKey && e.key === 'k') || (e.ctrlKey && e.key === 'k') || (e.key === '/' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA')) {
+      if ((e.metaKey && e.key === 'k') || (e.ctrlKey && e.key === 'k') || (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'x') || (e.key === '/' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA')) {
         e.preventDefault();
         termOverlay.classList.toggle('active');
         if (termOverlay.classList.contains('active')) termInput.focus();
@@ -167,12 +278,17 @@
         termInput.value = '';
         if (val === '') return;
         
-        appendLine(`guest@manshverse:~$ ${val}`, '#fff');
+        appendLine(`guest@sparsh-dev:~$ ${val}`, '#fff');
         
         if (lowerVal === 'clear') {
           termOutput.innerHTML = '';
           return;
+        } else if (lowerVal === 'admin') {
+          appendLine(`Initiating secure handshake...`, '#00ffcc');
+          setTimeout(() => { window.location.href = '/admin'; }, 800);
+          return;
         }
+        
         if (lowerVal === 'exit') {
           termOverlay.classList.remove('active');
           return;
@@ -211,15 +327,20 @@
 
   const unlockAudio = () => {
     if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
+      audioCtx.resume().then(() => {
+        document.removeEventListener('click', unlockAudio);
+        document.removeEventListener('keydown', unlockAudio);
+        document.removeEventListener('touchstart', unlockAudio);
+      }).catch(() => {});
+    } else {
+      document.removeEventListener('click', unlockAudio);
+      document.removeEventListener('keydown', unlockAudio);
+      document.removeEventListener('touchstart', unlockAudio);
     }
-    document.removeEventListener('click', unlockAudio);
-    document.removeEventListener('keydown', unlockAudio);
-    document.removeEventListener('mouseover', unlockAudio);
   };
   document.addEventListener('click', unlockAudio, { passive: true });
   document.addEventListener('keydown', unlockAudio, { passive: true });
-  document.addEventListener('mouseover', unlockAudio, { passive: true });
+  document.addEventListener('touchstart', unlockAudio, { passive: true });
 
   const playSound = () => {
     if (!soundEnabled || audioCtx.state === 'suspended') return;
@@ -227,15 +348,15 @@
     const gain = audioCtx.createGain();
     
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.03);
-    gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.03);
+    osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.05);
+    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
     
     osc.connect(gain);
     gain.connect(audioCtx.destination);
     osc.start();
-    osc.stop(audioCtx.currentTime + 0.03);
+    osc.stop(audioCtx.currentTime + 0.05);
   };
 
   document.addEventListener('mouseover', (e) => {
