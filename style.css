@@ -27,11 +27,13 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:5rem;-webkit-font-smoothing:antialiased}
 body{background:#000;color:var(--t1);font-family:var(--sans);font-size:15px;line-height:1.6;overflow-x:hidden}
-@media(pointer:fine){body,body *{cursor:none!important}}
+@media(pointer:fine){body{cursor:none}}
 img{display:block;max-width:100%}
 a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:rgba(0,255,204,.15)}
+a[href]{pointer-events:auto!important;position:relative;z-index:2;cursor:pointer!important}
+button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;pointer-events:auto!important;position:relative;z-index:2}
+canvas{pointer-events:none!important}
 ul{list-style:none}
-button{font:inherit;border:0;background:none;color:inherit;cursor:pointer}
 ::selection{background:rgba(0,255,204,.18);color:#fff}
 
 /* Canvas sits at z:0 — all main content above it */
