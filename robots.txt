@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin.html
 
 # AI-specific crawlers — explicitly allowed
 User-agent: GPTBot

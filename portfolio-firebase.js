@@ -29,58 +29,117 @@
       if (type) sessionStorage.setItem('preselect-type', type);
     });
   });
-  const preselectType = sessionStorage.getItem('preselect-type');
-  if (preselectType) {
-    sessionStorage.removeItem('preselect-type');
-    const target = document.querySelector(`#pill-type .pill[data-val="${preselectType}"]`);
-    if (target) { target.classList.add('active'); formData.type = preselectType; }
-  }
-
-  // ── Minimal Inquiry Form ──────────────────────────────────────────────────
+  // ── Multi-step Form ───────────────────────────────────────────────────────
   const form = document.getElementById('inquiry-form');
   if (form) {
+    let currentStep = 1;
+    const formData = { type: '', budget: '', timeline: '' };
+
+    const preselectType = sessionStorage.getItem('preselect-type');
+    if (preselectType) {
+      sessionStorage.removeItem('preselect-type');
+      const target = document.querySelector(`#pill-type .pill[data-val="${preselectType}"]`);
+      if (target) { target.classList.add('active'); formData.type = preselectType; }
+    }
+
+    function showStep(n) {
+      document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+      const target = n === 'confirm' ? 'step-confirm' : 'step-' + n;
+      const el = document.getElementById(target);
+      if (el) el.classList.add('active');
+      document.querySelectorAll('.fstep').forEach(s => {
+        const sn = parseInt(s.dataset.step);
+        s.classList.toggle('active', sn === n);
+        s.classList.toggle('done', sn < n);
+      });
+      currentStep = n;
+    }
+
+    form.querySelectorAll('.form-next').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!validateStep(currentStep)) return;
+        showStep(parseInt(btn.dataset.next));
+      });
+    });
+    form.querySelectorAll('.form-back').forEach(btn => {
+      btn.addEventListener('click', () => showStep(parseInt(btn.dataset.back)));
+    });
+
+    document.querySelectorAll('.pill-select').forEach(group => {
+      group.querySelectorAll('.pill').forEach(pill => {
+        pill.addEventListener('click', () => {
+          group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          if (group.id === 'pill-type')     formData.type     = pill.dataset.val;
+          if (group.id === 'pill-budget')   formData.budget   = pill.dataset.val;
+          if (group.id === 'pill-timeline') formData.timeline = pill.dataset.val;
+        });
+      });
+    });
+
+    function validateStep(step) {
+      let ok = true;
+      if (step === 1) {
+        const name = document.getElementById('f-name');
+        const email = document.getElementById('f-email');
+        const ne = document.getElementById('err-name');
+        const ee = document.getElementById('err-email');
+        if (ne) {
+          if (!name.value.trim()) { ne.textContent = 'Name is required'; ok = false; } else ne.textContent = '';
+        }
+        if (ee) {
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) { ee.textContent = 'Valid email required'; ok = false; } else ee.textContent = '';
+        }
+      }
+      if (step === 2) {
+        const te = document.getElementById('err-type');
+        const de = document.getElementById('err-desc');
+        const desc = document.getElementById('f-desc');
+        if (te) {
+          if (!formData.type) { te.textContent = 'Select a project type'; ok = false; } else te.textContent = '';
+        }
+        if (de) {
+          if (desc.value.trim().length < 20) { de.textContent = 'Min 20 chars please'; ok = false; } else de.textContent = '';
+        }
+      }
+      if (step === 3) {
+        const be = document.getElementById('err-budget');
+        const te = document.getElementById('err-timeline');
+        if (be) {
+          if (!formData.budget)   { be.textContent = 'Select a budget range'; ok = false; } else be.textContent = '';
+        }
+        if (te) {
+          if (!formData.timeline) { te.textContent = 'Select a timeline';     ok = false; } else te.textContent = '';
+        }
+      }
+      return ok;
+    }
+
     function genTrackingId() {
       return `SSD-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
     }
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
-      
-      const nameEl = document.getElementById('f-name');
-      const emailEl = document.getElementById('f-email');
-      const descEl = document.getElementById('f-desc');
-      const errEl = document.getElementById('err-desc');
+      if (!validateStep(3)) return;
       const btn = document.getElementById('btn-submit');
       const label = document.getElementById('submit-label');
-      const spin = document.getElementById('submit-spin');
-
-      if (errEl) errEl.textContent = '';
-
-      if (!nameEl?.value.trim() || !emailEl?.value.trim() || !descEl?.value.trim()) {
-        return;
-      }
-
-      if (descEl.value.trim().length < 20) {
-        if (errEl) errEl.textContent = 'Min 20 chars please';
-        descEl.focus();
-        return;
-      }
-
+      const spin  = document.getElementById('submit-spin');
       if (btn) btn.disabled = true;
       if (label) label.textContent = 'Submitting...';
       if (spin) spin.style.display = 'inline-block';
 
       const trackingId = genTrackingId();
       const payload = {
-        name:        nameEl.value.trim(),
-        email:       emailEl.value.trim(),
-        company:     null,
-        projectType: 'General Inquiry',
-        description: descEl.value.trim(),
-        references:  null,
-        budget:      'Flexible',
-        timeline:    'Flexible',
-        referral:    null,
+        name:        document.getElementById('f-name').value.trim(),
+        email:       document.getElementById('f-email').value.trim(),
+        company:     document.getElementById('f-company').value.trim() || null,
+        projectType: formData.type,
+        description: document.getElementById('f-desc').value.trim(),
+        references:  document.getElementById('f-refs').value.trim() || null,
+        budget:      formData.budget,
+        timeline:    formData.timeline,
+        referral:    document.getElementById('f-referral').value.trim() || null,
         trackingId,
         status:      'new',
         aiSummary:   '',
@@ -101,20 +160,20 @@
         }).then(r => r.json()).then(ai => {
           if (ai.summary || ai.estimate) {
             docRef.update({ aiSummary: ai.summary || '', aiEstimate: ai.estimate || '' });
+            const ed = document.getElementById('est-display');
+            const ec = document.getElementById('confirm-estimate');
+            if (ed && ai.estimate) { ed.textContent = ai.estimate; if (ec) ec.style.display = 'flex'; }
           }
         }).catch(() => {});
 
-        if (label) label.textContent = `Submitted! ID: ${trackingId}`;
-        if (spin) spin.style.display = 'none';
-        
-        nameEl.value = '';
-        emailEl.value = '';
-        descEl.value = '';
-        
-        setTimeout(() => {
-          if (label) label.textContent = 'Submit inquiry';
-          if (btn) btn.disabled = false;
-        }, 5000);
+        const td = document.getElementById('tid-display');
+        if (td) td.textContent = trackingId;
+        showStep('confirm');
+        document.getElementById('tid-copy')?.addEventListener('click', () => {
+          navigator.clipboard.writeText(trackingId).catch(() => {});
+          const tc = document.getElementById('tid-copy');
+          if (tc) tc.textContent = 'Copied!';
+        });
       } catch (err) {
         console.error(err);
         if (label) label.textContent = 'Error — try again';
