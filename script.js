@@ -377,21 +377,6 @@
     });
   }
 
-  // Page Transitions
-  document.querySelectorAll('a[href]').forEach(link => {
-    link.addEventListener('click', (e) => {
-      const href = link.getAttribute('href');
-      if (!href) return;
-      // Ignore external links, anchors, mail/phone actions, and blank targets
-      if (href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || link.target === '_blank') return;
-      
-      e.preventDefault();
-      document.body.classList.add('page-exit');
-      
-      setTimeout(() => {
-        window.location.href = href;
-      }, 300);
-    });
-  });
+  // Page Transitions (Removed to fix mobile click issues)
 
 })();

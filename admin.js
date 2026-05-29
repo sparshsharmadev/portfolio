@@ -1,19 +1,12 @@
 (function () {
   'use strict';
 
-  // ── Terminal Gate ─────────────────────────────────────────────────────────
-  const termGate = document.getElementById('terminal-gate');
-  const termOutput = document.getElementById('admin-term-output');
-  const termPrompt = document.getElementById('admin-term-prompt');
-  const termInput = document.getElementById('admin-term-input');
-
+  // ── PIN Gate ─────────────────────────────────────────────────────────
   const pinGate = document.getElementById('pin-gate');
   const adminWrap = document.getElementById('admin-wrap');
   const pinInput = document.getElementById('pin-input');
   const pinBtn = document.getElementById('pin-btn');
   const pinErr = document.getElementById('pin-err');
-
-  let termState = 'idle'; // idle -> user -> pass
 
   // PIN logic
   const _k = [24,19,26,30,24,26,24,28];
@@ -49,15 +42,15 @@
               setTimeout(() => {
                 if (!window._auth.currentUser) {
                   sessionStorage.removeItem('admin-auth');
-                  termGate.style.display = 'flex';
-                  termInput.focus();
+                  pinGate.style.display = 'flex';
+                  pinInput.focus();
                 }
               }, 1500);
             } else {
               // Truly logged out or wrong account
               sessionStorage.removeItem('admin-auth');
-              termGate.style.display = 'flex';
-              termInput.focus();
+              pinGate.style.display = 'flex';
+              pinInput.focus();
             }
           }
         });
@@ -65,58 +58,7 @@
     }, 50);
   }
 
-  function printLine(text, isInput = false) {
-    const div = document.createElement('div');
-    div.className = 'term-line';
-    if (isInput) {
-      div.textContent = termPrompt.textContent + ' ' + text;
-    } else {
-      div.innerHTML = text;
-    }
-    termOutput.appendChild(div);
-    termOutput.scrollTop = termOutput.scrollHeight;
-  }
-
-  termInput.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      const val = termInput.value.trim();
-      printLine(termState === 'pass' ? '*'.repeat(val.length) : val, true);
-      termInput.value = '';
-
-      if (termState === 'idle') {
-        if (val.toLowerCase() === 'admin') {
-          termState = 'user';
-          termPrompt.textContent = 'username:';
-        } else {
-          printLine('zsh: command not found: ' + val + '. Access denied.');
-        }
-      } else if (termState === 'user') {
-        if (val.toLowerCase() === 'sparsh') {
-          termState = 'pass';
-          termPrompt.textContent = 'password:';
-          termInput.type = 'password';
-        } else {
-          termState = 'idle';
-          termPrompt.textContent = 'guest@sparsh-dev:~$';
-          printLine('<span style="color:var(--red)">Authentication failure. Wrong username.</span>');
-        }
-      } else if (termState === 'pass') {
-        termInput.type = 'text';
-        if (val === 'milkcake2706!') {
-          printLine('<span style="color:var(--cyan)">Authentication successful. Decrypting payload...</span>');
-          setTimeout(() => {
-            termGate.style.display = 'none';
-            pinGate.style.display = 'flex';
-            pinInput.focus();
-          }, 800);
-        } else {
-          termState = 'idle';
-          termPrompt.textContent = 'guest@sparsh-dev:~$';
-          printLine('<span style="color:var(--red)">Authentication failure. Wrong password.</span>');
-        }
-      }
-    }
-  });
+  // Terminal Logic Removed
 
   // ── PIN Gate ───────────────────────────────────────────────────────────────
   pinBtn.addEventListener('click', checkPin);

@@ -167,12 +167,13 @@ main,header.nav,footer{position:relative;z-index:1}
   transition:background .3s var(--ease);
 }
 .card:first-of-type{border-top:1px solid rgba(255,255,255,.07)}
-.card:hover{background:rgba(255,255,255,.02)}
-.card:last-child{border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:0}
-
-.card-glow{position:absolute;top:-80px;right:-80px;width:350px;height:350px;border-radius:50%;
-  opacity:0;transition:opacity .5s var(--ease);pointer-events:none}
-.card:hover .card-glow{opacity:1}
+  .card-glow{position:absolute;top:-80px;right:-80px;width:350px;height:350px;border-radius:50%;
+    opacity:0;transition:opacity .5s var(--ease);pointer-events:none}
+  @media (hover: hover) {
+    .card:hover{background:rgba(255,255,255,.02)}
+    .card:hover .card-glow{opacity:1}
+    .card-private:hover{border-style:solid;border-color:var(--purple);background:rgba(167,139,250,.02)}
+  }
 .glow-cyan{background:radial-gradient(circle,rgba(34,211,238,.07) 0%,transparent 55%)}
 .glow-orange{background:radial-gradient(circle,rgba(255,106,61,.06) 0%,transparent 55%)}
 .glow-purple{background:radial-gradient(circle,rgba(167,139,250,.05) 0%,transparent 55%)}
@@ -184,10 +185,9 @@ main,header.nav,footer{position:relative;z-index:1}
 .card-giant-num{position:absolute;right:1rem;top:1rem;font-size:10rem;font-weight:900;color:rgba(255,255,255,0.015);pointer-events:none;user-select:none;z-index:0;font-family:var(--mono);line-height:.8}
 
 .card-private{border:1px dashed var(--border-h);background:transparent;padding:2.5rem;border-radius:4px;box-shadow:none!important;position:relative}
-.card-private:hover{border-style:solid;border-color:var(--purple);background:rgba(167,139,250,.02)}
 .card-private .card-title{font-family:var(--mono);text-transform:uppercase;font-size:clamp(1.6rem,4vw,2.2rem);letter-spacing:0}
 
-.clients-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.clients-grid{display:grid;grid-template-columns:1fr 1fr}
 .ticket{padding:1.8rem;border:1px solid var(--border);border-left:4px solid var(--border-h);border-radius:4px;background:transparent;transition:background .3s var(--ease),border-color .3s}
 .ticket:hover{background:var(--s1);border-left-color:var(--cyan)}
 .ticket .card-acts{margin-top:1.2rem}
@@ -746,18 +746,22 @@ html.skip-intro .hero-btns[data-hero-reveal] { animation-delay: 0.4s !important;
 }
 .pcard-accent {
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 2.5px;
+  bottom: -1px;
+  left: 2rem;
+  right: 2rem;
+  height: 1px;
   opacity: 0;
-  transition: opacity 0.3s var(--ease);
+  transform: scale(0.9);
+  transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
 }
-.pcard:hover {
-  background: rgba(255, 255, 255, 0.008);
-}
-.pcard:hover .pcard-accent {
-  opacity: 1;
+@media (hover: hover) {
+  .pcard:hover {
+    background: rgba(255, 255, 255, 0.008);
+  }
+  .pcard:hover .pcard-accent {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* Lab Specific Badge & Note */

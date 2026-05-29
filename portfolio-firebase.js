@@ -1,11 +1,11 @@
-/* ── Portfolio Firebase + Inquiry + Chat + Availability ─────────────────── */
+/* ΓöÇΓöÇ Portfolio Firebase + Inquiry + Chat + Availability ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ */
 (function () {
   'use strict';
 
   const db = window._db;
   if (!db) return;
 
-  // ── Availability Status Pill ───────────────────────────────────────────────
+  // ΓöÇΓöÇ Availability Status Pill ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   const availDot  = document.getElementById('avail-dot');
   const availText = document.getElementById('avail-text');
 
@@ -22,177 +22,186 @@
     }
   }, () => {});
 
-  // ── Service Cards → pre-fill project type on click ────────────────────────
+  // ΓöÇΓöÇ Service Cards ΓåÆ pre-fill project type on click ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   document.querySelectorAll('.svc-cta').forEach(a => {
     a.addEventListener('click', () => {
       const type = a.closest('.svc-card')?.dataset.type;
       if (type) sessionStorage.setItem('preselect-type', type);
     });
   });
-  // ── Multi-step Form ───────────────────────────────────────────────────────
+  const preselectType = sessionStorage.getItem('preselect-type');
+  if (preselectType) {
+    sessionStorage.removeItem('preselect-type');
+    const target = document.querySelector(`#pill-type .pill[data-val="${preselectType}"]`);
+    if (target) { target.classList.add('active'); formData.type = preselectType; }
+  }
+
+  // ΓöÇΓöÇ Multi-step Form ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   const form = document.getElementById('inquiry-form');
-  if (form) {
-    let currentStep = 1;
-    const formData = { type: '', budget: '', timeline: '' };
+  if (!form) return;
 
-    const preselectType = sessionStorage.getItem('preselect-type');
-    if (preselectType) {
-      sessionStorage.removeItem('preselect-type');
-      const target = document.querySelector(`#pill-type .pill[data-val="${preselectType}"]`);
-      if (target) { target.classList.add('active'); formData.type = preselectType; }
-    }
+  let currentStep = 1;
+  const formData = { type: '', budget: '', timeline: '' };
 
-    function showStep(n) {
-      document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
-      const target = n === 'confirm' ? 'step-confirm' : 'step-' + n;
-      const el = document.getElementById(target);
-      if (el) el.classList.add('active');
-      document.querySelectorAll('.fstep').forEach(s => {
-        const sn = parseInt(s.dataset.step);
-        s.classList.toggle('active', sn === n);
-        s.classList.toggle('done', sn < n);
-      });
-      currentStep = n;
-    }
-
-    form.querySelectorAll('.form-next').forEach(btn => {
-      btn.addEventListener('click', () => {
-        if (!validateStep(currentStep)) return;
-        showStep(parseInt(btn.dataset.next));
-      });
+  function showStep(n) {
+    document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+    const target = n === 'confirm' ? 'step-confirm' : 'step-' + n;
+    const el = document.getElementById(target);
+    if (el) el.classList.add('active');
+    document.querySelectorAll('.fstep').forEach(s => {
+      const sn = parseInt(s.dataset.step);
+      s.classList.toggle('active', sn === n);
+      s.classList.toggle('done', sn < n);
     });
-    form.querySelectorAll('.form-back').forEach(btn => {
-      btn.addEventListener('click', () => showStep(parseInt(btn.dataset.back)));
-    });
+    currentStep = n;
+  }
 
-    document.querySelectorAll('.pill-select').forEach(group => {
-      group.querySelectorAll('.pill').forEach(pill => {
-        pill.addEventListener('click', () => {
-          group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-          pill.classList.add('active');
-          if (group.id === 'pill-type')     formData.type     = pill.dataset.val;
-          if (group.id === 'pill-budget')   formData.budget   = pill.dataset.val;
-          if (group.id === 'pill-timeline') formData.timeline = pill.dataset.val;
-        });
+  form.querySelectorAll('.form-next').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (!validateStep(currentStep)) return;
+      showStep(parseInt(btn.dataset.next));
+    });
+  });
+  form.querySelectorAll('.form-back').forEach(btn => {
+    btn.addEventListener('click', () => showStep(parseInt(btn.dataset.back)));
+  });
+
+  document.querySelectorAll('.pill-select').forEach(group => {
+    group.querySelectorAll('.pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        group.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        if (group.id === 'pill-type')     formData.type     = pill.dataset.val;
+        if (group.id === 'pill-budget')   formData.budget   = pill.dataset.val;
+        if (group.id === 'pill-timeline') formData.timeline = pill.dataset.val;
       });
     });
+  });
 
-    function validateStep(step) {
-      let ok = true;
-      if (step === 1) {
-        const name = document.getElementById('f-name');
-        const email = document.getElementById('f-email');
-        const ne = document.getElementById('err-name');
-        const ee = document.getElementById('err-email');
-        if (ne) {
-          if (!name.value.trim()) { ne.textContent = 'Name is required'; ok = false; } else ne.textContent = '';
-        }
-        if (ee) {
-          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) { ee.textContent = 'Valid email required'; ok = false; } else ee.textContent = '';
-        }
-      }
-      if (step === 2) {
-        const te = document.getElementById('err-type');
-        const de = document.getElementById('err-desc');
-        const desc = document.getElementById('f-desc');
-        if (te) {
-          if (!formData.type) { te.textContent = 'Select a project type'; ok = false; } else te.textContent = '';
-        }
-        if (de) {
-          if (desc.value.trim().length < 20) { de.textContent = 'Min 20 chars please'; ok = false; } else de.textContent = '';
-        }
-      }
-      if (step === 3) {
-        const be = document.getElementById('err-budget');
-        const te = document.getElementById('err-timeline');
-        if (be) {
-          if (!formData.budget)   { be.textContent = 'Select a budget range'; ok = false; } else be.textContent = '';
-        }
-        if (te) {
-          if (!formData.timeline) { te.textContent = 'Select a timeline';     ok = false; } else te.textContent = '';
-        }
-      }
-      return ok;
+  function validateStep(step) {
+    let ok = true;
+    if (step === 1) {
+      const name = document.getElementById('f-name');
+      const email = document.getElementById('f-email');
+      const ne = document.getElementById('err-name');
+      const ee = document.getElementById('err-email');
+      if (!name.value.trim()) { ne.textContent = 'Name is required'; ok = false; } else ne.textContent = '';
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) { ee.textContent = 'Valid email required'; ok = false; } else ee.textContent = '';
     }
-
-    function genTrackingId() {
-      return `SSD-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    if (step === 2) {
+      const te = document.getElementById('err-type');
+      const de = document.getElementById('err-desc');
+      const desc = document.getElementById('f-desc');
+      if (!formData.type) { te.textContent = 'Select a project type'; ok = false; } else te.textContent = '';
+      if (desc.value.trim().length < 20) { de.textContent = 'Min 20 chars please'; ok = false; } else de.textContent = '';
     }
+    if (step === 3) {
+      const be = document.getElementById('err-budget');
+      const te = document.getElementById('err-timeline');
+      if (!formData.budget)   { be.textContent = 'Select a budget range'; ok = false; } else be.textContent = '';
+      if (!formData.timeline) { te.textContent = 'Select a timeline';     ok = false; } else te.textContent = '';
+    }
+    return ok;
+  }
 
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      if (!validateStep(3)) return;
-      const btn = document.getElementById('btn-submit');
-      const label = document.getElementById('submit-label');
-      const spin  = document.getElementById('submit-spin');
-      if (btn) btn.disabled = true;
-      if (label) label.textContent = 'Submitting...';
-      if (spin) spin.style.display = 'inline-block';
-
-      const trackingId = genTrackingId();
-      const payload = {
-        name:        document.getElementById('f-name').value.trim(),
-        email:       document.getElementById('f-email').value.trim(),
-        company:     document.getElementById('f-company').value.trim() || null,
-        projectType: formData.type,
-        description: document.getElementById('f-desc').value.trim(),
-        references:  document.getElementById('f-refs').value.trim() || null,
-        budget:      formData.budget,
-        timeline:    formData.timeline,
-        referral:    document.getElementById('f-referral').value.trim() || null,
-        trackingId,
-        status:      'new',
-        aiSummary:   '',
-        aiEstimate:  '',
-        adminNotes:  '',
-        createdAt:   firebase.firestore.FieldValue.serverTimestamp(),
-        updatedAt:   firebase.firestore.FieldValue.serverTimestamp()
-      };
-
+  // ΓöÇΓöÇ AI Assist Button ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  const assistBtn = document.getElementById('btn-assist');
+  if (assistBtn) {
+    assistBtn.addEventListener('click', async () => {
+      const desc = document.getElementById('f-desc');
+      if (desc.value.trim().length < 10) { desc.focus(); return; }
+      assistBtn.classList.add('loading');
+      assistBtn.textContent = 'Γ£ª Improving...';
       try {
-        const docRef = await db.collection('portfolio-requests').add(payload);
-
-        // AI estimate in background
-        fetch('/api/estimate', {
+        const res = await fetch('/api/assist', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ projectType: payload.projectType, description: payload.description, budget: payload.budget, timeline: payload.timeline })
-        }).then(r => r.json()).then(ai => {
-          if (ai.summary || ai.estimate) {
-            docRef.update({ aiSummary: ai.summary || '', aiEstimate: ai.estimate || '' });
-            const ed = document.getElementById('est-display');
-            const ec = document.getElementById('confirm-estimate');
-            if (ed && ai.estimate) { ed.textContent = ai.estimate; if (ec) ec.style.display = 'flex'; }
-          }
-        }).catch(() => {});
-
-        const td = document.getElementById('tid-display');
-        if (td) td.textContent = trackingId;
-        showStep('confirm');
-        document.getElementById('tid-copy')?.addEventListener('click', () => {
-          navigator.clipboard.writeText(trackingId).catch(() => {});
-          const tc = document.getElementById('tid-copy');
-          if (tc) tc.textContent = 'Copied!';
+          body: JSON.stringify({ raw: desc.value.trim(), projectType: formData.type || 'general' })
         });
-      } catch (err) {
-        console.error(err);
-        if (label) label.textContent = 'Error — try again';
-        if (spin) spin.style.display = 'none';
-        if (btn) btn.disabled = false;
-      }
+        const data = await res.json();
+        if (data.improved) desc.value = data.improved;
+      } catch (_) {}
+      assistBtn.classList.remove('loading');
+      assistBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 1l1.5 4.5L14 7l-4.5 1.5L8 13l-1.5-4.5L2 7l4.5-1.5L8 1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg> Help me describe this`;
     });
   }
 
-  // ── Sidebar Tracking Lookup ───────────────────────────────────────────────
+  // ΓöÇΓöÇ Form Submission ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  function genTrackingId() {
+    return `SSD-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+  }
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!validateStep(3)) return;
+    const btn = document.getElementById('btn-submit');
+    const label = document.getElementById('submit-label');
+    const spin  = document.getElementById('submit-spin');
+    btn.disabled = true;
+    label.textContent = 'Submitting...';
+    if (spin) spin.style.display = 'inline-block';
+
+    const trackingId = genTrackingId();
+    const payload = {
+      name:        document.getElementById('f-name').value.trim(),
+      email:       document.getElementById('f-email').value.trim(),
+      company:     document.getElementById('f-company').value.trim() || null,
+      projectType: formData.type,
+      description: document.getElementById('f-desc').value.trim(),
+      references:  document.getElementById('f-refs').value.trim() || null,
+      budget:      formData.budget,
+      timeline:    formData.timeline,
+      referral:    document.getElementById('f-referral').value.trim() || null,
+      trackingId,
+      status:      'new',
+      aiSummary:   '',
+      aiEstimate:  '',
+      adminNotes:  '',
+      createdAt:   firebase.firestore.FieldValue.serverTimestamp(),
+      updatedAt:   firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    try {
+      const docRef = await db.collection('portfolio-requests').add(payload);
+
+      // AI estimate in background
+      fetch('/api/estimate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectType: payload.projectType, description: payload.description, budget: payload.budget, timeline: payload.timeline })
+      }).then(r => r.json()).then(ai => {
+        if (ai.summary || ai.estimate) {
+          docRef.update({ aiSummary: ai.summary || '', aiEstimate: ai.estimate || '' });
+          const ed = document.getElementById('est-display');
+          const ec = document.getElementById('confirm-estimate');
+          if (ed && ai.estimate) { ed.textContent = ai.estimate; if (ec) ec.style.display = 'flex'; }
+        }
+      }).catch(() => {});
+
+      document.getElementById('tid-display').textContent = trackingId;
+      showStep('confirm');
+      document.getElementById('tid-copy')?.addEventListener('click', () => {
+        navigator.clipboard.writeText(trackingId).catch(() => {});
+        document.getElementById('tid-copy').textContent = 'Copied!';
+      });
+    } catch (err) {
+      console.error(err);
+      label.textContent = 'Error ΓÇö try again';
+      if (spin) spin.style.display = 'none';
+      btn.disabled = false;
+    }
+  });
+
+  // ΓöÇΓöÇ Sidebar Tracking Lookup ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   const trackBtn    = document.getElementById('track-btn');
   const trackInput  = document.getElementById('track-input');
   const trackResult = document.getElementById('track-result');
 
   if (trackBtn && trackInput && trackResult) {
     const statusLabels = {
-      new: '🟡 Received — under review', reviewing: '🔵 Being reviewed',
-      in_discussion: '🟣 In discussion', accepted: '🟢 Accepted — project starting soon',
-      declined: '🔴 Declined', completed: '✅ Completed'
+      new: '≡ƒƒí Received ΓÇö under review', reviewing: '≡ƒö╡ Being reviewed',
+      in_discussion: '≡ƒƒú In discussion', accepted: '≡ƒƒó Accepted ΓÇö project starting soon',
+      declined: '≡ƒö┤ Declined', completed: 'Γ£à Completed'
     };
     async function doLookup() {
       const tid = trackInput.value.trim().toUpperCase();
@@ -219,7 +228,7 @@
     trackInput.addEventListener('keydown', e => { if (e.key === 'Enter') doLookup(); });
   }
 
-  // ── AI Chat Widget ────────────────────────────────────────────────────────
+  // ΓöÇΓöÇ AI Chat Widget ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
   const widget   = document.getElementById('chat-widget');
   const toggle   = document.getElementById('chat-toggle');
   const closeBtn = document.getElementById('chat-close');
@@ -234,35 +243,23 @@
   let chatOpen = false;
   let chatHistory = [];
 
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', () => {
+      if (chatOpen && window.innerWidth <= 600) {
+        const offset = window.innerHeight - window.visualViewport.height;
+        widget.style.bottom = offset > 0 ? (offset + 16) + 'px' : '';
+      } else {
+        widget.style.bottom = '';
+      }
+    });
+  }
+
   function setChatOpen(open) {
     chatOpen = open;
     widget.classList.toggle('open', open);
     if (iconOpen)  iconOpen.style.display  = open ? 'none' : '';
     if (iconClose) iconClose.style.display = open ? ''     : 'none';
     if (open && input) input.focus();
-    if (window.visualViewport) {
-      setTimeout(handleViewportChange, 150);
-    }
-  }
-
-  function handleViewportChange() {
-    if (!chatOpen) {
-      widget.style.bottom = '';
-      return;
-    }
-    const vh = window.innerHeight;
-    const vvHeight = window.visualViewport.height;
-    const offset = vh - vvHeight;
-    if (offset > 45) {
-      widget.style.bottom = `calc(0.5rem + ${offset}px)`;
-    } else {
-      widget.style.bottom = '';
-    }
-  }
-
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', handleViewportChange);
-    window.visualViewport.addEventListener('scroll', handleViewportChange);
   }
 
   toggle.addEventListener('click', () => setChatOpen(!chatOpen));
@@ -291,7 +288,7 @@
         body: JSON.stringify({ messages: chatHistory })
       });
       const data = await res.json();
-      const reply = data.reply || "I'm having trouble — try the inquiry form!";
+      const reply = data.reply || "I'm having trouble ΓÇö try the inquiry form!";
       typing.remove();
       appendMsg('ai', reply);
       chatHistory.push({ role: 'assistant', content: reply });
