@@ -381,8 +381,9 @@
   document.querySelectorAll('a[href]').forEach(link => {
     link.addEventListener('click', (e) => {
       const href = link.getAttribute('href');
-      // Ignore external links, anchors, and blank targets
-      if (href.startsWith('http') || href.startsWith('#') || link.target === '_blank') return;
+      if (!href) return;
+      // Ignore external links, anchors, mail/phone actions, and blank targets
+      if (href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:') || link.target === '_blank') return;
       
       e.preventDefault();
       document.body.classList.add('page-exit');
