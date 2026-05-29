@@ -378,6 +378,8 @@ main,header.nav,footer{position:relative;z-index:1}
   .clients-grid{grid-template-columns:1fr}
   .stack-grid{grid-template-columns:1fr 1fr}
   .contact-grid{grid-template-columns:1fr}
+  .hire-grid{grid-template-columns:1fr;gap:2.5rem}
+  .hire-sidebar{position:static}
   .sect-sub{margin-left:0;width:100%}
   .building-strip{flex-direction:column;gap:.5rem}
   .creds-grid{gap:.75rem}
@@ -597,6 +599,8 @@ html.skip-intro .hero-btns[data-hero-reveal] { animation-delay: 0.4s !important;
 .chat-toggle:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff;transform:scale(1.04)}
 .chat-panel{
   width:320px;
+  height:400px;
+  max-height:70vh;
   border:1px solid rgba(255,255,255,.08);
   border-radius:14px;
   background:#0a0a0a;
@@ -943,7 +947,7 @@ html.skip-intro .hero-btns[data-hero-reveal] { animation-delay: 0.4s !important;
 }
 @media(max-width:600px){
   .chat-widget{bottom:1rem;right:1rem}
-  .chat-panel{width:calc(100vw - 2rem)}
+  .chat-panel{width:calc(100vw - 2rem);height:320px;max-height:50vh}
   .pill-select{gap:.3rem}
 }
 

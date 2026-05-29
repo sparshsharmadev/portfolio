@@ -240,6 +240,29 @@
     if (iconOpen)  iconOpen.style.display  = open ? 'none' : '';
     if (iconClose) iconClose.style.display = open ? ''     : 'none';
     if (open && input) input.focus();
+    if (window.visualViewport) {
+      setTimeout(handleViewportChange, 150);
+    }
+  }
+
+  function handleViewportChange() {
+    if (!chatOpen) {
+      widget.style.bottom = '';
+      return;
+    }
+    const vh = window.innerHeight;
+    const vvHeight = window.visualViewport.height;
+    const offset = vh - vvHeight;
+    if (offset > 45) {
+      widget.style.bottom = `calc(0.5rem + ${offset}px)`;
+    } else {
+      widget.style.bottom = '';
+    }
+  }
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', handleViewportChange);
+    window.visualViewport.addEventListener('scroll', handleViewportChange);
   }
 
   toggle.addEventListener('click', () => setChatOpen(!chatOpen));
