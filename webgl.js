@@ -64,19 +64,63 @@
       return mesh;
     }
 
-    // Large background icosahedron (hero centerpiece)
-    const icoGeo = new THREE.IcosahedronGeometry(5, 1);
-    const icoMain = addMesh(icoGeo, wireMat(CYAN, 0.10), -2, 1, -8, 1, 0.3, 0.5, 0.1);
-    objects.push({ mesh: icoMain, rx: 0.0008, ry: 0.0015, rz: 0.0005, floatAmp: 0.4, floatSpd: 0.6 });
+    // Centerpiece Group (centerpiece + nested octahedron + coordinate rings)
+    const centerGroup = new THREE.Group();
+    centerGroup.position.set(-2, 1, -8);
+    scene.add(centerGroup);
 
-    // Medium torus (left)
-    const torusGeo = new THREE.TorusGeometry(3.2, 0.3, 12, 48);
-    const torusL = addMesh(torusGeo, wireMat(PURPLE, 0.13), -14, 3, -4, 1, 1.1, 0.3, 0.2);
-    objects.push({ mesh: torusL, rx: 0.001, ry: 0.0006, rz: 0.0012, floatAmp: 0.6, floatSpd: 0.4 });
+    const icoMain = new THREE.Mesh(new THREE.IcosahedronGeometry(5, 1), wireMat(CYAN, 0.08));
+    centerGroup.add(icoMain);
 
-    // Medium torus (right)
-    const torusR = addMesh(new THREE.TorusGeometry(2.6, 0.25, 12, 48), wireMat(ORANGE, 0.11), 14, -2, -6, 1, 0.8, 1.2, 0.0);
-    objects.push({ mesh: torusR, rx: 0.0012, ry: 0.001, rz: 0.0008, floatAmp: 0.5, floatSpd: 0.5 });
+    const innerOcta = new THREE.Mesh(new THREE.OctahedronGeometry(2.6, 0), wireMat(ORANGE, 0.11));
+    centerGroup.add(innerOcta);
+
+    const ring1 = new THREE.Mesh(new THREE.TorusGeometry(6.2, 0.04, 8, 64), wireMat(WHITE, 0.05));
+    const ring2 = new THREE.Mesh(new THREE.TorusGeometry(7.5, 0.03, 8, 64), wireMat(CYAN, 0.04));
+    ring1.rotation.set(0.5, 0.5, 0.5);
+    ring2.rotation.set(1.2, -0.4, 0.3);
+    centerGroup.add(ring1);
+    centerGroup.add(ring2);
+
+    objects.push({ mesh: centerGroup, rx: 0, ry: 0, rz: 0, floatAmp: 0.4, floatSpd: 0.6 });
+    objects.push({ mesh: icoMain, rx: 0.0006, ry: 0.0012, rz: 0.0004, floatAmp: 0, floatSpd: 0 });
+    objects.push({ mesh: innerOcta, rx: -0.0012, ry: -0.0018, rz: -0.0008, floatAmp: 0, floatSpd: 0 });
+    objects.push({ mesh: ring1, rx: 0.0002, ry: 0.0003, rz: 0.0001, floatAmp: 0, floatSpd: 0 });
+    objects.push({ mesh: ring2, rx: -0.0001, ry: 0.0004, rz: -0.0002, floatAmp: 0, floatSpd: 0 });
+
+    // Concentric Torus Group (left)
+    const torusLGroup = new THREE.Group();
+    torusLGroup.position.set(-14, 3, -4);
+    scene.add(torusLGroup);
+
+    const torusL = new THREE.Mesh(new THREE.TorusGeometry(3.2, 0.25, 12, 48), wireMat(PURPLE, 0.12));
+    torusL.rotation.set(1.1, 0.3, 0.2);
+    torusLGroup.add(torusL);
+
+    const torusL2 = new THREE.Mesh(new THREE.TorusGeometry(2.3, 0.15, 8, 36), wireMat(CYAN, 0.08));
+    torusL2.rotation.set(0.5, 1.2, 0.8);
+    torusLGroup.add(torusL2);
+
+    objects.push({ mesh: torusLGroup, rx: 0, ry: 0, rz: 0, floatAmp: 0.6, floatSpd: 0.4 });
+    objects.push({ mesh: torusL, rx: 0.0008, ry: 0.0005, rz: 0.001, floatAmp: 0, floatSpd: 0 });
+    objects.push({ mesh: torusL2, rx: -0.0012, ry: -0.0008, rz: -0.0005, floatAmp: 0, floatSpd: 0 });
+
+    // Concentric Torus Group (right)
+    const torusRGroup = new THREE.Group();
+    torusRGroup.position.set(14, -2, -6);
+    scene.add(torusRGroup);
+
+    const torusR = new THREE.Mesh(new THREE.TorusGeometry(2.6, 0.25, 12, 48), wireMat(ORANGE, 0.11));
+    torusR.rotation.set(0.8, 1.2, 0.0);
+    torusRGroup.add(torusR);
+
+    const torusR2 = new THREE.Mesh(new THREE.TorusGeometry(1.8, 0.14, 8, 36), wireMat(PURPLE, 0.07));
+    torusR2.rotation.set(0.2, 0.5, 0.9);
+    torusRGroup.add(torusR2);
+
+    objects.push({ mesh: torusRGroup, rx: 0, ry: 0, rz: 0, floatAmp: 0.5, floatSpd: 0.5 });
+    objects.push({ mesh: torusR, rx: 0.001, ry: 0.0008, rz: 0.0006, floatAmp: 0, floatSpd: 0 });
+    objects.push({ mesh: torusR2, rx: -0.0014, ry: -0.001, rz: -0.0008, floatAmp: 0, floatSpd: 0 });
 
     // Octahedron (top right)
     const octaGeo = new THREE.OctahedronGeometry(2.2, 0);
