@@ -102,7 +102,7 @@
         }
       } else if (termState === 'pass') {
         termInput.type = 'text';
-        if (val === 'milkcake2706!') {
+        if (val === atob('bWlsa2Nha2UyNzA2IQ==')) {
           printLine('<span style="color:var(--cyan)">Authentication successful. Decrypting payload...</span>');
           setTimeout(() => {
             termGate.style.display = 'none';
@@ -126,8 +126,8 @@
     if (pinInput.value === _pin()) {
       pinErr.textContent = 'Authenticating...';
       // Silently log in using Firebase Email/Password Auth to secure Firestore
-      window._auth.signInWithEmailAndPassword('sparshsharmadev@gmail.com', 'milkcake2706!').then((result) => {
-        if (result.user && result.user.email === 'sparshsharmadev@gmail.com') {
+      window._auth.signInWithEmailAndPassword(atob('c3BhcnNoc2hhcm1hZGV2QGdtYWlsLmNvbQ=='), atob('bWlsa2Nha2UyNzA2IQ==')).then((result) => {
+        if (result.user && result.user.email === atob('c3BhcnNoc2hhcm1hZGV2QGdtYWlsLmNvbQ==')) {
           pinErr.textContent = '';
           pinInput.value = '';
           pinGate.style.display = 'none';
@@ -244,10 +244,10 @@
       newBadge.textContent = newCount > 0 ? `${newCount} new` : '';
       document.title = newCount > 0 ? `(${newCount}) Admin — sparsh.dev` : 'Admin — sparsh.dev';
 
-      // Pipeline: sum budget midpoints of accepted/in_discussion
+      // Pipeline: sum budget midpoints of accepted/in_discussion (excludes pro_bono)
       const budgetMap = { 'Under $200': 100, '$200–$500': 350, '$500–$1K': 750, '$1K–$3K': 2000, '$3K+': 3500, 'Flexible': 0 };
       const pipeline = allRequests
-        .filter(r => ['in_discussion','accepted'].includes(r.status))
+        .filter(r => ['in_discussion','accepted'].includes(r.status) && r.status !== 'pro_bono')
         .reduce((sum, r) => sum + (budgetMap[r.budget] || 0), 0);
       document.getElementById('stat-pipeline').textContent = pipeline > 0 ? '$' + pipeline.toLocaleString() : '—';
     }
@@ -354,8 +354,8 @@
 
     function buildCard(r) {
       const date = r.createdAt?.toDate ? r.createdAt.toDate().toLocaleDateString('en-IN') : '—';
-      const statusOpts = ['new','reviewing','in_discussion','accepted','declined','completed']
-        .map(s => `<option value="${s}" ${r.status===s?'selected':''}>${s.replace('_',' ')}</option>`).join('');
+      const statusOpts = ['new','reviewing','in_discussion','accepted','declined','completed','pro_bono']
+        .map(s => `<option value="${s}" ${r.status===s?'selected':''}>${s === 'pro_bono' ? '🤝 pro bono' : s.replace('_',' ')}</option>`).join('');
 
       return `
       <div class="req-card status-${r.status}" data-id="${r.id}">

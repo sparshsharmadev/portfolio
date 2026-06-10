@@ -1016,6 +1016,34 @@ html.skip-intro .hero-btns[data-hero-reveal] { animation-delay: 0.4s !important;
   border: 2px solid rgba(255, 255, 255, 0.3) !important;
 }
 
+/* Experience timeline closing marker */
+.exp-end-marker {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-left: 1.5rem;
+  position: relative;
+  margin-top: 0.5rem;
+}
+.exp-end-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cyan);
+  border: 2px solid rgba(0, 255, 204, 0.3);
+  box-shadow: 0 0 12px rgba(0, 255, 204, 0.3);
+  position: absolute;
+  left: -5px;
+}
+.exp-end-label {
+  font-family: var(--mono);
+  font-size: 0.55rem;
+  color: var(--t3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-left: 1rem;
+}
+
 /* Experimental Lab Grid & Cards */
 .lab-grid {
   display: grid;
@@ -1161,3 +1189,175 @@ html.skip-intro .hero-btns[data-hero-reveal] { animation-delay: 0.4s !important;
   }
 }
 
+/* ── Journey Timeline ─────────────────────────────────────────────────────── */
+.journey-timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-left: 2rem;
+}
+.journey-timeline::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--border) 0%, var(--cyan) 50%, var(--cyan) 100%);
+  opacity: 0.5;
+}
+.journey-node {
+  position: relative;
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+}
+.journey-node:first-child { padding-top: 0; }
+.journey-node:last-child { padding-bottom: 0; }
+.journey-marker {
+  position: absolute;
+  left: -2rem;
+  top: 1.5rem;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--t3);
+  border: 2px solid var(--s1);
+  box-shadow: 0 0 0 1px var(--border);
+  z-index: 2;
+  flex-shrink: 0;
+  transform: translateX(0.5px);
+}
+.journey-node:first-child .journey-marker { top: 0; }
+.journey-marker-pulse {
+  background: var(--orange);
+  box-shadow: 0 0 0 1px rgba(255,106,61,.3), 0 0 12px rgba(255,106,61,.2);
+}
+.journey-marker-cyan {
+  background: var(--cyan);
+  box-shadow: 0 0 0 1px rgba(0,255,204,.3), 0 0 12px rgba(0,255,204,.15);
+}
+.journey-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.4rem 1.6rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--s1);
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
+  flex: 1;
+}
+.journey-content:hover {
+  border-color: var(--border-h);
+  background: rgba(255,255,255,.015);
+}
+.journey-label {
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--cyan);
+  text-transform: uppercase;
+}
+.journey-node:first-child .journey-label { color: var(--orange); }
+.journey-text {
+  font-size: 0.9rem;
+  color: var(--t2);
+  line-height: 1.7;
+  max-width: 600px;
+}
+
+/* ── Mentor Card ──────────────────────────────────────────────────────────── */
+.mentor-card {
+  position: relative;
+  margin-top: 3.5rem;
+  padding: 2.5rem;
+  border: 1px solid rgba(167,139,250,.2);
+  border-radius: 20px;
+  background: linear-gradient(145deg, rgba(167,139,250,.04) 0%, transparent 60%), var(--s1);
+  overflow: hidden;
+  transition: border-color 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.mentor-card:hover {
+  border-color: rgba(167,139,250,.35);
+  transform: translateY(-3px);
+}
+.mentor-card-glow {
+  position: absolute;
+  top: -60px;
+  right: -60px;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(167,139,250,.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+.mentor-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.mentor-badge {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--purple);
+  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border: 1px solid rgba(167,139,250,.25);
+  border-radius: 4px;
+  background: rgba(167,139,250,.07);
+  width: fit-content;
+}
+.mentor-title {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--t1);
+  margin-top: 0.4rem;
+}
+.mentor-desc {
+  font-size: 0.9rem;
+  color: var(--t2);
+  line-height: 1.7;
+  max-width: 620px;
+}
+.mentor-details {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.mentor-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.mentor-detail-label {
+  font-family: var(--mono);
+  font-size: 0.58rem;
+  color: var(--t3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.mentor-detail-val {
+  font-size: 0.85rem;
+  color: var(--t2);
+  font-weight: 500;
+}
+
+/* Journey + Mentor Responsive */
+@media(max-width:600px) {
+  .journey-timeline { padding-left: 1.5rem; }
+  .journey-marker { left: -1.5rem; }
+  .journey-content { padding: 1rem 1.2rem; }
+  .mentor-card { padding: 1.5rem; margin-top: 2.5rem; }
+  .mentor-details { flex-direction: column; gap: 1rem; }
+}

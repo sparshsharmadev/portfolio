@@ -320,3 +320,7 @@ button{font:inherit;background:none;border:0;cursor:pointer;color:inherit}
   .controls-row{padding:.6rem}
   .search-input{width:100%;margin-left:0}
 }
+
+/* Pro Bono status */
+.req-card.status-pro_bono { border-left: 3px solid #2dd4bf; }
+.st-pro_bono { background: rgba(45,212,191,.12); color: #2dd4bf; border-color: rgba(45,212,191,.25); }
