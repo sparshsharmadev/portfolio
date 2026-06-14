@@ -101,82 +101,53 @@
     });
   });
 
-  // ── Staggered Reveal System ───────────────────────────────────────────────
-  //
-  // [data-reveal]          → the container; fades + slides up when in view
-  // [data-reveal-stagger]  → children inside are animated one-by-one
-  //
-  // We also auto-tag children of these containers:
-  //   .card-feats li, .card-pills span, article.card, .ticket, .cl-item
+  // ── Smooth Scrolling (CSS-native, zero JS overhead) ──────────────────────
+  document.documentElement.style.scrollBehavior = 'smooth';
 
-  function prepareStaggerChildren() {
-    // Project cards inside sections → stagger between siblings
-    document.querySelectorAll('#work, #clients').forEach((section) => {
-      const cards = section.querySelectorAll('article.card, article.ticket');
-      cards.forEach((card, i) => {
-        card.dataset.stagger = i;
-      });
-    });
+  // ── GSAP ScrollReveal ───────────────────────────────────────────────────
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.registerPlugin(ScrollTrigger);
 
-    // Feature bullet lists
-    document.querySelectorAll('.card-feats').forEach((list) => {
-      list.querySelectorAll('li').forEach((li, i) => {
-        li.dataset.staggerChild = i;
-      });
-    });
-
-    // Tech pills
-    document.querySelectorAll('.card-pills').forEach((pills) => {
-      pills.querySelectorAll('span').forEach((span, i) => {
-        span.dataset.staggerChild = i;
-      });
-    });
-
-    // Contact links
-    document.querySelectorAll('.contact-links .cl-item').forEach((item, i) => {
-      item.dataset.staggerChild = i;
-    });
-
-    // Cred cards
-    document.querySelectorAll('.cred-card').forEach((card, i) => {
-      card.dataset.stagger = i;
-    });
-  }
-
-  prepareStaggerChildren();
-
-  const reveals = document.querySelectorAll("[data-reveal]");
-
-  if ("IntersectionObserver" in window) {
-    const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const el = entry.target;
-
-          // Stagger index on the element itself (for cards/tickets)
-          const si = el.dataset.stagger ? parseInt(el.dataset.stagger) : 0;
-          el.style.transitionDelay = `${si * 90}ms`;
-          el.classList.add("vis");
-
-          // Animate stagger-children inside this container
-          el.querySelectorAll('[data-stagger-child]').forEach((child) => {
-            const ci = parseInt(child.dataset.staggerChild) || 0;
-            // Children start after the container's own delay
-            child.style.transitionDelay = `${si * 90 + ci * 55 + 80}ms`;
-            child.classList.add('reveal-child-vis');
-          });
-
-          obs.unobserve(el);
-        });
-      },
-      { threshold: 0.06, rootMargin: "0px 0px -40px 0px" }
-    );
-    reveals.forEach((el) => obs.observe(el));
-  } else {
+    const reveals = document.querySelectorAll("[data-reveal]");
     reveals.forEach((el) => {
-      el.classList.add("vis");
-      el.querySelectorAll('[data-stagger-child]').forEach((c) => c.classList.add('reveal-child-vis'));
+      el.style.transition = 'none'; // Prevent CSS from fighting GSAP
+      gsap.fromTo(el, 
+        { autoAlpha: 0, y: 50 },
+        {
+          duration: 1.2, 
+          autoAlpha: 1, 
+          y: 0, 
+          ease: "expo.out", 
+          scrollTrigger: {
+            trigger: el,
+            start: "top 85%",
+            toggleActions: "play none none none"
+          }
+        }
+      );
+    });
+
+    // Stagger cards, tickets, and blocks
+    const staggerGroups = document.querySelectorAll('#work, #clients, #creds');
+    staggerGroups.forEach(group => {
+      const items = group.querySelectorAll('article.card, article.ticket, .exp-block, .cred-card');
+      if (items.length === 0) return;
+      items.forEach(item => item.style.transition = 'none');
+      gsap.fromTo(items, 
+        { autoAlpha: 0, y: 40 },
+        {
+          duration: 1,
+          autoAlpha: 1,
+          y: 0,
+          stagger: 0.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: group,
+            start: "top 80%",
+            toggleActions: "play none none none"
+          }
+        }
+      );
     });
   }
 

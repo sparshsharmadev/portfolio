@@ -312,29 +312,9 @@ main,header.nav,footer{position:relative;z-index:1}
 }
 
 /* ── Stagger Children ─────────────────────────────────────────────────────── */
-/* These start hidden; JS adds reveal-child-vis with individual delays */
-.card-feats li,
-.card-pills span,
-.contact-links .cl-item {
-  opacity:0;
-  transform:translateY(14px) scale(0.97);
-  transition:
-    opacity  .5s var(--ease),
-    transform .5s var(--ease),
-    border-color .25s,
-    background .25s;
-  will-change:opacity,transform;
-}
-.card-feats li.reveal-child-vis,
-.card-pills span.reveal-child-vis,
-.contact-links .cl-item.reveal-child-vis {
-  opacity:1;
-  transform:translateY(0) scale(1);
-}
-
-/* Pills hover still works after reveal */
-.card-pills span.reveal-child-vis:hover{border-color:var(--border-h);color:var(--t2)}
-.cl-item.reveal-child-vis:hover{background:var(--s2)}
+/* Removed old staggered IntersectionObserver logic. Children now fade in with their parent. */
+.card-pills span:hover{border-color:var(--border-h);color:var(--t2)}
+.cl-item:hover{background:var(--s2)}
 
 /* ── Parallax Layer Shell ─────────────────────────────────────────────────── */
 /* JS wraps each parallax target in this; the shell gets translateY,          */
@@ -1047,9 +1027,9 @@ html.skip-intro .hero-btns[data-hero-reveal] { animation-delay: 0.4s !important;
 /* Experimental Lab Grid & Cards */
 .lab-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr;
   gap: 1.5rem;
-  width: min(1360px, calc(100% - 2.5rem));
+  width: min(1000px, calc(100% - 2.5rem));
   margin: 0 auto 3rem;
 }
 .lab-card {
