@@ -474,19 +474,22 @@ html.skip-intro .hero-btns[data-hero-reveal] { animation-delay: 0.4s !important;
 
 /* ── Availability Status Pill ─────────────────────────────────────────────── */
 .hero-status-pill{
-  display:inline-flex;align-items:center;gap:.65rem;
-  padding:.45rem 1.2rem .45rem 1rem;
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:50px;
-  background:rgba(255,255,255,.03);
-  font-family:var(--sans);font-size:.85rem;color:var(--t2);
-  letter-spacing:.02em;
+  display:inline-flex;align-items:center;gap:.75rem;
+  padding:0;
+  border:none;
+  background:transparent;
+  font-family:var(--mono);
+  font-size:.85rem;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  color:var(--cyan);
   transition:all .25s var(--ease);text-decoration:none;
   width:fit-content;cursor:pointer;
 }
-.hero-status-pill:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.2);color:var(--t1);}
-.status-arrow{opacity:.5;font-size:.85rem;transition:opacity .2s,transform .2s;}
-.hero-status-pill:hover .status-arrow{opacity:.8;transform:translateX(4px);}
+.hero-status-pill:hover{color:#fff;}
+.status-arrow{font-size:1rem;transition:transform .2s;}
+.hero-status-pill:hover .status-arrow{transform:translateX(5px);}
 
 /* ── Services Grid ────────────────────────────────────────────────────────── */
 .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
