@@ -29,3 +29,4 @@ User-agent: ClaudeBot
 Allow: /
 
 Sitemap: https://sparshsharma-dev.xyz/sitemap.xml
+Sitemap: https://sparshsharma-dev.xyz/sitemap-v2.xml

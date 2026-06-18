@@ -101,50 +101,86 @@
     });
   });
 
-  // ── Smooth Scrolling (CSS-native, zero JS overhead) ──────────────────────
-  document.documentElement.style.scrollBehavior = 'smooth';
-
-  // ── GSAP ScrollReveal ───────────────────────────────────────────────────
+  // ── GSAP ScrollReveal (Advanced Awwwards Style) ─────────────────────────
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
     gsap.registerPlugin(ScrollTrigger);
 
-    const reveals = document.querySelectorAll("[data-reveal]");
-    reveals.forEach((el) => {
-      el.style.transition = 'none'; // Prevent CSS from fighting GSAP
-      gsap.fromTo(el, 
-        { autoAlpha: 0, y: 50 },
+    // Advanced Text Reveal for Section Titles
+    const titles = document.querySelectorAll(".sect-title");
+    titles.forEach((title) => {
+      // Very basic text splitting (since we don't have SplitText)
+      const words = title.innerText.split(" ");
+      title.innerHTML = "";
+      words.forEach(word => {
+        const span = document.createElement("span");
+        span.style.display = "inline-block";
+        span.style.overflow = "hidden";
+        span.style.verticalAlign = "top";
+        const innerSpan = document.createElement("span");
+        innerSpan.style.display = "inline-block";
+        innerSpan.innerText = word + "\u00A0"; // add space
+        span.appendChild(innerSpan);
+        title.appendChild(span);
+      });
+
+      gsap.fromTo(title.querySelectorAll("span > span"),
+        { yPercent: 120, rotationZ: 5 },
         {
-          duration: 1.2, 
-          autoAlpha: 1, 
-          y: 0, 
-          ease: "expo.out", 
+          duration: 1.2,
+          yPercent: 0,
+          rotationZ: 0,
+          stagger: 0.05,
+          ease: "expo.out",
           scrollTrigger: {
-            trigger: el,
-            start: "top 85%",
+            trigger: title,
+            start: "top 90%",
             toggleActions: "play none none none"
           }
         }
       );
     });
 
-    // Stagger cards, tickets, and blocks
-    const staggerGroups = document.querySelectorAll('#work, #clients, #creds');
+    // Advanced Stagger for Cards with ClipPath
+    const staggerGroups = document.querySelectorAll('#work, #clients, #creds, #contact');
     staggerGroups.forEach(group => {
-      const items = group.querySelectorAll('article.card, article.ticket, .exp-block, .cred-card');
+      const items = group.querySelectorAll('article.card, article.ticket, .exp-block, .cred-card, .inquiry-form-wrap, .track-lookup');
       if (items.length === 0) return;
-      items.forEach(item => item.style.transition = 'none');
+      items.forEach(item => {
+        item.style.transition = 'none'; // remove CSS transitions to let GSAP handle
+        item.style.clipPath = 'polygon(0 0, 100% 0, 100% 0, 0 0)'; // hidden top
+      });
       gsap.fromTo(items, 
-        { autoAlpha: 0, y: 40 },
+        { clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)', y: 60 },
         {
-          duration: 1,
-          autoAlpha: 1,
+          duration: 1.8,
+          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
           y: 0,
-          stagger: 0.1,
-          ease: "power3.out",
+          stagger: 0.15,
+          ease: "expo.out",
           scrollTrigger: {
             trigger: group,
             start: "top 80%",
-            toggleActions: "play none none none"
+            toggleActions: "play none none reverse"
+          }
+        }
+      );
+    });
+
+    // Subtitles and tags fade up
+    const reveals = document.querySelectorAll("[data-reveal]:not(.sect-title)");
+    reveals.forEach((el) => {
+      el.style.transition = 'none';
+      gsap.fromTo(el, 
+        { autoAlpha: 0, y: 30 },
+        {
+          duration: 1.5, 
+          autoAlpha: 1, 
+          y: 0, 
+          ease: "power3.out", 
+          scrollTrigger: {
+            trigger: el,
+            start: "top 95%",
+            toggleActions: "play none none reverse"
           }
         }
       );
@@ -173,50 +209,60 @@
     sects.forEach((s) => so.observe(s));
   }
 
-  // Custom cursor (desktop only)
+  // ── GSAP Custom Cursor & Magnetic Effect ─────────────────────────────────
   const cur = document.getElementById("cur");
   if (cur && window.matchMedia("(pointer:fine)").matches) {
-    let mx = -100, my = -100, cx = -100, cy = -100;
+    gsap.set(cur, { xPercent: -50, yPercent: -50 });
+    let xTo = gsap.quickTo(cur, "x", { duration: 0.15, ease: "power3" });
+    let yTo = gsap.quickTo(cur, "y", { duration: 0.15, ease: "power3" });
 
-    document.addEventListener("mousemove", (e) => {
-      mx = e.clientX;
-      my = e.clientY;
+    window.addEventListener("mousemove", (e) => {
+      xTo(e.clientX);
+      yTo(e.clientY);
       if (!cur.classList.contains("vis")) cur.classList.add("vis");
-    }, { passive: true });
-
-    (function tick() {
-      cx += (mx - cx) * 0.15;
-      cy += (my - cy) * 0.15;
-      cur.style.left = cx + "px";
-      cur.style.top = cy + "px";
-      requestAnimationFrame(tick);
-    })();
-
-    const hoverTargets = "a, button, .card, .cred-card, .cl-item, .stack-col, .building-strip";
-    document.addEventListener("mouseover", (e) => {
-      if (e.target.closest(hoverTargets)) cur.classList.add("hover");
     });
-    document.addEventListener("mouseout", (e) => {
-      if (e.target.closest(hoverTargets)) cur.classList.remove("hover");
-    });
-  }
 
-  // Magnetic Effect for Buttons & Links
-  if (window.matchMedia("(pointer:fine)").matches) {
-    const magnetics = document.querySelectorAll('.btn, .nav-link, .case-back');
+    const magnetics = document.querySelectorAll('.btn, .nav-link, a, .ticket');
     magnetics.forEach(mag => {
-      mag.addEventListener('mousemove', (e) => {
-        const rect = mag.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        mag.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px) scale(1.02)`;
+      mag.addEventListener('mouseenter', () => {
+        gsap.to(cur, { width: 60, height: 60, backgroundColor: "#fff", border: "none", mixBlendMode: "difference", duration: 0.3 });
       });
       mag.addEventListener('mouseleave', () => {
-        mag.style.transform = '';
+        gsap.to(cur, { width: 18, height: 18, backgroundColor: "transparent", border: "1.5px solid rgba(255,255,255,0.5)", mixBlendMode: "normal", duration: 0.3 });
+        gsap.to(mag, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+      });
+      mag.addEventListener('mousemove', (e) => {
+        // Only magnetic if it's a small element like a button or nav-link
+        if (mag.classList.contains('btn') || mag.classList.contains('nav-link')) {
+          const rect = mag.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          gsap.to(mag, { x: x * 0.4, y: y * 0.4, duration: 0.2 });
+        }
       });
     });
   }
 
+    // ── 3D Tilt Effect for Project Cards ────────────────────────────────────
+    const pcards = document.querySelectorAll('.pcard');
+    pcards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const deltaX = (x - centerX) / centerX;
+        const deltaY = (y - centerY) / centerY;
+        
+        card.style.transform = `perspective(1200px) rotateX(${-deltaY * 4}deg) rotateY(${deltaX * 4}deg) scale3d(1.01, 1.01, 1.01)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = `perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+      });
+    });
   // Terminal Logic
   const termOverlay = document.getElementById('cmd-terminal');
   const termInput = document.getElementById('term-input');
