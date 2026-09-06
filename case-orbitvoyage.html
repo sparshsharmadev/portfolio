@@ -3,14 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OrbitVoyage — Case Study | Sparsh Sharma</title>
-  <meta name="description" content="How I built a real-time satellite tracking dashboard with SGP4 propagation, conjunction detection, and 3D WebGL visualization at 17.">
+  <title>OrbitVoyage | 3D Satellite Tracking Dashboard Case Study by Sparsh Sharma</title>
+  <meta name="description" content="Case study of OrbitVoyage, a real-time satellite tracking dashboard with SGP4 propagation and WebGL visualization built by full-stack developer Sparsh Sharma.">
+  <link rel="canonical" href="https://sparshsharma-dev.xyz/case-orbitvoyage.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sparshsharma-dev.xyz/case-orbitvoyage.html">
+  <meta property="og:title" content="OrbitVoyage | 3D Satellite Tracking Dashboard Case Study">
+  <meta property="og:description" content="Case study of OrbitVoyage, a real-time satellite tracking dashboard with SGP4 propagation and WebGL visualization.">
+  <meta property="og:image" content="https://sparshsharma-dev.xyz/assets/images/pfp.jpeg">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:site_name" content="Sparsh Sharma &mdash; Developer Portfolio">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="OrbitVoyage | 3D Satellite Tracking Dashboard Case Study">
+  <meta name="twitter:description" content="Case study of OrbitVoyage, a real-time satellite tracking dashboard with SGP4 propagation and WebGL visualization.">
+  <meta name="twitter:image" content="https://sparshsharma-dev.xyz/assets/images/pfp.jpeg">
+
+  <!-- Schema Markup (Software Application) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "OrbitVoyage",
+    "operatingSystem": "Web",
+    "applicationCategory": "EducationalApplication",
+    "author": {
+      "@type": "Person",
+      "name": "Sparsh Sharma",
+      "url": "https://sparshsharma-dev.xyz/"
+    },
+    "description": "Real-time satellite tracking dashboard with SGP4 propagation and WebGL visualization."
+  }
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="case-style.css">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon.png">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/png" sizes="48x48" href="assets/images/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/images/favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
 </head>
 <body>
 
@@ -35,7 +74,7 @@
         <p class="case-subtitle">Real-time satellite tracking dashboard with SGP4 propagation, conjunction detection, and 3D WebGL globe visualization.</p>
         <div class="case-meta">
           <span>React · Three.js · WebGL · NestJS · SGP4 · WebSockets</span>
-          <a href="https://orbitvoyage.vercel.app" target="_blank" rel="noopener noreferrer" class="case-link">Live site &#x2197;</a>
+          <a href="https://orbitvoyage.vercel.app" target="_blank" rel="noopener noreferrer" class="case-link">Live site <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px;vertical-align:text-bottom"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg></a>
         </div>
       </header>
 
@@ -113,6 +152,14 @@
         </div>
       </section>
 
+      <section class="case-section" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+        <h3 class="case-h3">Next Project</h3>
+        <a href="case-conduit.html" style="color: var(--c-purple); text-decoration: none; font-weight: 500; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+          Read about Conduit 
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </section>
+
     </article>
   </main>
 
@@ -123,6 +170,6 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script defer src="script.js"></script>
 </body>
 </html>

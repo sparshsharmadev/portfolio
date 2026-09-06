@@ -66,7 +66,7 @@ a { color: inherit; text-decoration: none; }
 }
 .r-avatar {
   width: 52px; height: 52px; border-radius: 50%;
-  object-fit: cover; border: 2px solid var(--border);
+  object-fit: cover; object-position: center top; border: 2px solid var(--border);
 }
 .r-name {
   font-size: 24px; font-weight: 900; letter-spacing: -0.7px; line-height: 1.1;
@@ -138,6 +138,15 @@ a { color: inherit; text-decoration: none; }
   text-decoration: underline;
 }
 
+/* Inline link style for within bullet points */
+.r-link-inline {
+  font-family: var(--mono); font-size: inherit; color: var(--link);
+  transition: text-decoration 0.2s;
+}
+.r-link-inline:hover {
+  text-decoration: underline;
+}
+
 .r-item ul {
   list-style: none; padding: 0; margin-bottom: 3px;
 }
@@ -185,12 +194,14 @@ a { color: inherit; text-decoration: none; }
 }
 
 
-/* Print rules for layout — highly optimized to force a single, elegant A4 page */
+/* ──────────────────────────────────────────────
+   Print rules — compressed for dense A4 output
+   ────────────────────────────────────────────── */
 @media print {
-  @page { size: A4; margin: 8mm 10mm; }
+  @page { size: A4; margin: 5mm 7mm; }
 
   .no-print { display: none !important; }
-  html { font-size: 11px; }
+  html { font-size: 8.4px; }
   body { background: #fff; color: #111; }
 
   .page {
@@ -198,22 +209,37 @@ a { color: inherit; text-decoration: none; }
     border: none; border-radius: 0; box-shadow: none;
   }
 
-  .r-header { padding-bottom: 10px; border-bottom-width: 1.5px; }
-  .r-avatar { width: 44px; height: 44px; }
-  .r-name { font-size: 20px; }
+  .r-header { padding-bottom: 6px; border-bottom-width: 1.5px; }
+  .r-avatar { width: 34px; height: 34px; }
+  .r-name { font-size: 16px; }
+  .r-role { font-size: 9px; margin-top: 2px; }
+  .r-header-right { font-size: 9px; line-height: 1.4; }
   .r-contact-link { color: #111; text-decoration: none; }
 
-  .r-sect { padding: 9px 0; }
-  .r-item { padding: 4px 0; }
+  .r-sect { padding: 5px 0; }
+  .r-item { padding: 2px 0; }
+  .r-item + .r-item { border-top: 0.5px solid #e0e0e0; }
 
-  .r-label { margin-bottom: 4px; }
-  .r-skills { gap: 4px 24px; font-size: 10.5px; }
-  
-  .r-item-head h3 { font-size: 12.5px; }
-  .r-item ul li { font-size: 10.5px; margin-bottom: 1px; }
-  .r-text { font-size: 11px; }
-  .r-edu { font-size: 10.5px; }
+  .r-label { margin-bottom: 2px; font-size: 7.5px; letter-spacing: 1.5px; }
+  .r-text { font-size: 9px; line-height: 1.4; }
 
-  .r-item { break-inside: avoid; }
-  .r-sect { break-inside: avoid; }
+  .r-item-head { margin-bottom: 1px; }
+  .r-item-head h3 { font-size: 10px; }
+  .r-tag { font-size: 6.5px; padding: 0px 3px; margin-left: 4px; }
+  .r-link { font-size: 8px; }
+
+  .r-item ul { margin-bottom: 1px; }
+  .r-item ul li { font-size: 9px; margin-bottom: 0px; line-height: 1.35; padding-left: 9px; }
+  .r-stack { font-size: 7.5px; }
+
+  .r-skills { gap: 2px 16px; font-size: 9px; line-height: 1.4; }
+
+  .r-edu { font-size: 9px; gap: 8px; }
+  .r-edu-sub { font-size: 8.5px; }
+  .r-date { font-size: 8px; }
+
+  .r-item { break-inside: avoid; page-break-inside: avoid; }
+  .r-label { break-after: avoid; page-break-after: avoid; }
+  .r-header { break-inside: avoid; page-break-inside: avoid; }
+  .r-edu { break-inside: avoid; page-break-inside: avoid; }
 }

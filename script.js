@@ -394,67 +394,6 @@
     });
   }
 
-  // ── Easter Egg ────────────────────────────────────────────────────────────
-  let konamiCode = "mansi";
-  let konamiIndex = 0;
-  document.addEventListener('keydown', (e) => {
-    // Ignore keystrokes inside inputs or textareas so it doesn't trigger accidentally
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    
-    if (e.key.toLowerCase() === konamiCode[konamiIndex]) {
-      konamiIndex++;
-      if (konamiIndex === konamiCode.length) {
-        konamiIndex = 0;
-        triggerMansiEasterEgg();
-      }
-    } else {
-      // Reset if wrong key, unless it's the first letter again
-      konamiIndex = e.key.toLowerCase() === konamiCode[0] ? 1 : 0;
-    }
-  });
 
-  function triggerMansiEasterEgg() {
-    // Create overlay
-    const overlay = document.createElement('div');
-    overlay.style.position = 'fixed';
-    overlay.style.inset = '0';
-    overlay.style.background = 'radial-gradient(circle at center, rgba(167,139,250,0.15) 0%, transparent 60%)';
-    overlay.style.zIndex = '10001';
-    overlay.style.pointerEvents = 'none';
-    overlay.style.display = 'flex';
-    overlay.style.alignItems = 'center';
-    overlay.style.justifyContent = 'center';
-    overlay.style.transition = 'opacity 3s ease';
-    overlay.style.opacity = '1';
-    
-    // Create text
-    const text = document.createElement('div');
-    text.textContent = 'Sparnity = 0.999 Mansh 💜';
-    text.style.fontFamily = 'var(--mono)';
-    text.style.fontSize = 'clamp(1rem, 4vw, 1.5rem)';
-    text.style.color = 'var(--purple)';
-    text.style.textShadow = '0 0 30px rgba(167,139,250,0.8)';
-    text.style.opacity = '0';
-    text.style.transform = 'translateY(20px)';
-    text.style.transition = 'all 1.5s cubic-bezier(0.16, 1, 0.3, 1)';
-    text.style.letterSpacing = '0.05em';
-    
-    overlay.appendChild(text);
-    document.body.appendChild(overlay);
-    
-    // Animate in
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        text.style.opacity = '1';
-        text.style.transform = 'translateY(0)';
-      }, 100);
-    });
-    
-    // Animate out and remove
-    setTimeout(() => {
-      overlay.style.opacity = '0';
-      setTimeout(() => overlay.remove(), 3000);
-    }, 4500);
-  }
 
 })();

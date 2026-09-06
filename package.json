@@ -3,5 +3,8 @@
     "firebase": "^12.13.0",
     "ws": "^8.20.1",
     "xhr2": "^0.2.1"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.4"
   }
 }

@@ -26,7 +26,7 @@
 /* Reset Utility */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:5rem;-webkit-font-smoothing:antialiased}
-body{background:#000;color:var(--t1);font-family:var(--sans);font-size:15px;line-height:1.6;overflow-x:hidden}
+body{background:#000 url('assets/images/blackhole_bg.png') center center / cover no-repeat fixed;color:var(--t1);font-family:var(--sans);font-size:15px;line-height:1.6;overflow-x:hidden}
 @media(pointer:fine){body{cursor:none}}
 img{display:block;max-width:100%}
 a{color:inherit;text-decoration:none;-webkit-tap-highlight-color:rgba(0,255,204,.15)}
@@ -69,7 +69,7 @@ main,header.nav,footer{position:relative;z-index:1}
 
 /* Brand */
 .nav-brand{display:flex;align-items:center;gap:.6rem;margin-right:auto}
-.nav-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(255,255,255,.15);
+.nav-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:center top;border:1.5px solid rgba(255,255,255,.15);
   filter:brightness(.75) contrast(1.1) grayscale(.2);
   transition:filter .3s,border-color .3s}
 .nav-brand:hover .nav-avatar{filter:brightness(.9) contrast(1.05) grayscale(0);border-color:rgba(0,255,204,.3)}
@@ -148,7 +148,7 @@ main,header.nav,footer{position:relative;z-index:1}
 .btn-big{padding:.9rem 2rem;font-size:.92rem}
 
 /* Generic Sections */
-.sect{padding:clamp(4.5rem,10vw,8.5rem) 0;border-top:1px solid var(--border);background:#000;position:relative;z-index:1}
+.sect{padding:clamp(4.5rem,10vw,8.5rem) 0;border-top:1px solid var(--border);background:rgba(0,0,0,.85);position:relative;z-index:1}
 .sect-last{border-bottom:none}
 
 .sect-head{margin-bottom:4rem;display:flex;flex-direction:column;align-items:flex-start;gap:.5rem}

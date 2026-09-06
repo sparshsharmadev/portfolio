@@ -2,55 +2,76 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://sparshsharma-dev.xyz/</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-07-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://sparshsharma-dev.xyz/blog</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://sparshsharma-dev.xyz/blog/building-transformers-from-scratch</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://sparshsharma-dev.xyz/sparsh-and-mansi.html</loc>
-    <lastmod>2026-06-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+    <loc>https://sparshsharma-dev.xyz/blog/sgp4-satellite-tracking-web</loc>
+    <lastmod>2026-07-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
   </url>
+  <url>
+    <loc>https://sparshsharma-dev.xyz/blog/building-ai-routing-engine</loc>
+    <lastmod>2026-07-10</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+
   <url>
     <loc>https://sparshsharma-dev.xyz/resume.html</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-07-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sparshsharma-dev.xyz/llms.txt</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-07-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://sparshsharma-dev.xyz/case-orbitvoyage.html</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-07-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://sparshsharma-dev.xyz/case-manshverse.html</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-07-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://sparshsharma-dev.xyz/case-lexivoid.html</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-07-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://sparshsharma-dev.xyz/case-conduit.html</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-07-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://sparshsharma-dev.xyz/track.html</loc>
-    <lastmod>2026-06-18</lastmod>
+    <lastmod>2026-07-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>

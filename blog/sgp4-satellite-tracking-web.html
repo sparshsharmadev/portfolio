@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#000000">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="How I built OrbitVoyage — a real-time satellite tracking dashboard performing 2,400 SGP4 propagations per second in the browser. Orbital mechanics, WebGL rendering, and the 16ms frame budget.">
+  <meta name="keywords" content="SGP4 propagation, satellite tracking, WebGL, Three.js, orbital mechanics, TLE data, real-time dashboard, conjunction detection, Sparsh Sharma, OrbitVoyage">
+  <meta name="author" content="Sparsh Sharma">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <link rel="canonical" href="https://sparshsharma-dev.xyz/blog/sgp4-satellite-tracking-web">
+
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sparshsharma-dev.xyz/blog/sgp4-satellite-tracking-web">
+  <meta property="og:title" content="Tracking 250+ Satellites at 60fps — Sparsh Sharma">
+  <meta property="og:description" content="How I built a real-time satellite tracking dashboard using SGP4 orbital mechanics and WebGL rendering in the browser.">
+  <meta property="og:image" content="https://sparshsharma-dev.xyz/assets/images/pfp.jpeg">
+  <meta property="article:author" content="Sparsh Sharma">
+  <meta property="article:published_time" content="2026-07-20">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Tracking 250+ Satellites at 60fps: The Math Behind OrbitVoyage">
+  <meta name="twitter:description" content="SGP4 orbital mechanics, WebGL rendering, and the 16ms frame budget that controls everything.">
+
+  <title>Tracking 250+ Satellites at 60fps: The Math Behind OrbitVoyage | Sparsh Sharma</title>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Tracking 250+ Satellites at 60fps: The Math Behind OrbitVoyage",
+    "description": "How I built a real-time satellite tracking dashboard performing 2,400 SGP4 propagations per second in the browser.",
+    "url": "https://sparshsharma-dev.xyz/blog/sgp4-satellite-tracking-web",
+    "datePublished": "2026-07-20",
+    "dateModified": "2026-07-30",
+    "author": { "@type": "Person", "@id": "https://sparshsharma-dev.xyz/#sparsh", "name": "Sparsh Sharma" },
+    "publisher": { "@type": "Person", "name": "Sparsh Sharma" },
+    "wordCount": 2800,
+    "keywords": ["SGP4", "Satellite Tracking", "WebGL", "Three.js", "Orbital Mechanics", "TLE Data"],
+    "proficiencyLevel": "Advanced",
+    "isPartOf": { "@type": "Blog", "name": "Technical Journal — Sparsh Sharma", "url": "https://sparshsharma-dev.xyz/blog" }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../blog-style.css">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/images/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/images/favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+</head>
+
+<body>
+
+  <div class="reading-progress" aria-hidden="true"><span id="reading-fill"></span></div>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="cur" id="cur" aria-hidden="true"></div>
+
+  <div class="article-toolbar">
+    <div class="article-toolbar-inner">
+      <a href="../blog.html" class="article-back">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back to journal
+      </a>
+      <span class="article-toolbar-title">Tracking 250+ Satellites at 60fps</span>
+    </div>
+  </div>
+
+  <div class="article-layout">
+
+    <aside class="article-toc">
+      <span class="article-toc-label">Contents</span>
+      <ul class="article-toc-list">
+        <li><a href="#problem">The Problem</a></li>
+        <li><a href="#tle">TLE Data & SGP4</a></li>
+        <li><a href="#math">The Orbital Math</a></li>
+        <li><a href="#budget">The 16ms Budget</a></li>
+        <li><a href="#webgl">WebGL Globe</a></li>
+        <li><a href="#conjunction">Conjunction Detection</a></li>
+        <li><a href="#timeline">Timeline Scrubbing</a></li>
+        <li><a href="#kalman">Kalman Filtering</a></li>
+        <li><a href="#takeaways">Takeaways</a></li>
+      </ul>
+    </aside>
+
+    <article>
+
+      <header class="article-header">
+        <span class="article-category">Architecture / Astrophysics</span>
+        <h1 class="article-title">Tracking 250+ Satellites at 60fps: The Math Behind OrbitVoyage</h1>
+        <p class="article-subtitle">How I built a real-time satellite tracking dashboard that performs 2,400 SGP4 propagations per second — all inside a browser. Orbital mechanics, WebGL rendering, and the 16ms frame budget that controls everything.</p>
+        <div class="article-meta-row">
+          <div class="article-author">
+            <img src="../assets/images/pfp.jpeg" alt="Sparsh Sharma - Full-Stack Developer" class="article-author-img" width="32" height="32">
+            <span class="article-author-name">Sparsh Sharma</span>
+          </div>
+          <span class="article-meta-sep"></span>
+          <span class="article-meta-item">July 20, 2026</span>
+          <span class="article-meta-sep"></span>
+          <span class="article-meta-item">14 min read</span>
+        </div>
+      </header>
+
+      <div class="article-prose">
+
+        <h2 id="problem">The Problem</h2>
+        <p>I wanted to build something that pushed beyond typical web development — something that required real math, real data pipelines, and real-time rendering constraints. Satellite tracking was the answer.</p>
+        <p>The challenge: take raw Two-Line Element (TLE) data from NORAD/CelesTrak, propagate orbital positions using the SGP4 algorithm, detect potential collision events, and render everything on a 3D WebGL globe — all within a 16ms frame budget to maintain 60fps. In the browser. On consumer hardware.</p>
+
+        <h2 id="tle">TLE Data & SGP4</h2>
+        <p>Every tracked object in orbit has a <strong>Two-Line Element set</strong> — a compact data format maintained by the US Space Command. It looks like this:</p>
+
+        <pre><code><span class="cmt">ISS (ZARYA)</span>
+<span class="str">1 25544U 98067A   24001.50000000  .00016717  00000-0  10270-3 0  9025</span>
+<span class="str">2 25544  51.6416 247.4627 0006703 130.5360 325.0288 15.72125391271780</span></code></pre>
+
+        <p>These two lines encode everything needed to compute the satellite's position at any point in time: inclination, eccentricity, mean anomaly, argument of perigee, RAAN (Right Ascension of Ascending Node), and mean motion. The SGP4 algorithm takes these orbital elements and <strong>propagates</strong> them forward through time, accounting for atmospheric drag, Earth's oblateness (J2 perturbation), and gravitational harmonics.</p>
+        <p>SGP4 isn't a simple formula — it's a multi-step numerical propagator with deep-space corrections for objects above 225 minutes orbital period. I used the <code>satellite.js</code> library, which is a faithful JavaScript port of the original FORTRAN implementation.</p>
+
+        <h2 id="math">The Orbital Math</h2>
+        <p>The core propagation pipeline for each satellite, each frame:</p>
+
+        <pre><code><span class="kw">function</span> <span class="fn">propagateSatellite</span>(tle, timestamp) {
+  <span class="cmt">// Parse TLE into a satellite record</span>
+  <span class="kw">const</span> satrec = satellite.<span class="fn">twoline2satrec</span>(tle.line1, tle.line2);
+  
+  <span class="cmt">// Propagate to target time → ECI coordinates</span>
+  <span class="kw">const</span> posVel = satellite.<span class="fn">propagate</span>(satrec, timestamp);
+  <span class="kw">const</span> eci = posVel.position; <span class="cmt">// {x, y, z} in km</span>
+  
+  <span class="cmt">// ECI → geodetic (lat/lon/altitude)</span>
+  <span class="kw">const</span> gmst = satellite.<span class="fn">gstime</span>(timestamp);
+  <span class="kw">const</span> geo = satellite.<span class="fn">eciToGeodetic</span>(eci, gmst);
+  
+  <span class="kw">return</span> {
+    lat: satellite.<span class="fn">degreesLat</span>(geo.latitude),
+    lon: satellite.<span class="fn">degreesLong</span>(geo.longitude),
+    alt: geo.height, <span class="cmt">// km above Earth's surface</span>
+    velocity: posVel.velocity <span class="cmt">// km/s</span>
+  };
+}</code></pre>
+
+        <p>The tricky part: the ECI (Earth-Centered Inertial) frame doesn't rotate with the Earth. To place a satellite on a globe, you need to convert to the ECEF (Earth-Centered Earth-Fixed) frame using the Greenwich Mean Sidereal Time (GMST). Getting this conversion wrong means your satellites drift across the globe in a slow spiral — a bug I chased for hours.</p>
+
+        <h2 id="budget">The 16ms Frame Budget</h2>
+        <p>At 60fps, each frame has exactly <strong>16.67ms</strong> to complete. My budget breakdown:</p>
+        <ul>
+          <li><strong>SGP4 propagation (250 satellites):</strong> ~4ms</li>
+          <li><strong>Coordinate transforms (ECI → geodetic → 3D):</strong> ~1ms</li>
+          <li><strong>Conjunction detection:</strong> ~2ms</li>
+          <li><strong>Three.js scene update:</strong> ~1ms</li>
+          <li><strong>WebGL render call:</strong> ~4ms</li>
+          <li><strong>Buffer:</strong> ~4ms for garbage collection spikes</li>
+        </ul>
+        <p>Total: ~12ms, leaving a 4ms buffer. This was tight. I had to optimize aggressively:</p>
+        <ul>
+          <li><strong>Object pooling:</strong> Pre-allocated position vectors and reused them every frame. Zero per-frame allocations eliminated GC pauses entirely.</li>
+          <li><strong>Staggered propagation:</strong> Not all 250 satellites need to be updated every frame. Distant/slow satellites update every 2-3 frames. Only the ISS and critical objects update every frame.</li>
+          <li><strong>GPU instancing:</strong> Instead of 250 individual meshes, I used <code>THREE.InstancedMesh</code> — one draw call for all satellites. The GPU handles the per-instance transforms.</li>
+        </ul>
+
+        <div class="article-callout">
+          <span class="article-callout-label">Performance Insight</span>
+          <p>The single biggest performance win wasn't algorithmic — it was eliminating per-frame object allocation. JavaScript's garbage collector can cause 10-20ms pauses that blow the entire frame budget. Object pooling brought my worst-case frame time from 28ms to 11ms.</p>
+        </div>
+
+        <h2 id="webgl">WebGL Globe Rendering</h2>
+        <p>The 3D globe uses Three.js with custom shaders. The Earth sphere has a high-resolution texture mapped with proper UV coordinates. I added atmospheric glow using a second, slightly larger sphere with a custom fragment shader that fades from a blue tint to transparent at the edges.</p>
+        <p>Satellite positions (in geodetic coordinates) are converted to 3D Cartesian coordinates on the globe surface:</p>
+
+        <pre><code><span class="kw">function</span> <span class="fn">geoTo3D</span>(lat, lon, alt, globeRadius) {
+  <span class="kw">const</span> phi = (<span class="num">90</span> - lat) * (Math.PI / <span class="num">180</span>);
+  <span class="kw">const</span> theta = (lon + <span class="num">180</span>) * (Math.PI / <span class="num">180</span>);
+  <span class="kw">const</span> r = globeRadius + (alt / <span class="num">6371</span>) * globeRadius;
+  
+  <span class="kw">return</span> {
+    x: -(r * Math.<span class="fn">sin</span>(phi) * Math.<span class="fn">cos</span>(theta)),
+    y:   r * Math.<span class="fn">cos</span>(phi),
+    z:   r * Math.<span class="fn">sin</span>(phi) * Math.<span class="fn">sin</span>(theta)
+  };
+}</code></pre>
+
+        <p>Each satellite is represented as a point in an instanced mesh. On hover, a radial overlay panel displays telemetry data: orbital period, altitude, velocity, inclination, and the raw TLE data.</p>
+
+        <h2 id="conjunction">Conjunction Detection</h2>
+        <p>A <strong>conjunction</strong> is when two objects pass dangerously close in orbit. This is a real problem — the ISS regularly performs debris avoidance maneuvers. OrbitVoyage computes conjunction risk in real-time.</p>
+        <p>The brute-force approach (checking every pair) is O(n²) — for 250 satellites, that's 31,250 distance calculations per frame. I optimized this with <strong>spatial hashing</strong>: dividing orbital space into grid cells and only checking pairs within the same or adjacent cells. This brought the average comparison count down to ~800 per frame.</p>
+        <p>When two objects come within a configurable threshold (default: 10km), the system fires a conjunction alert with the time of closest approach (TCA), miss distance, and relative velocity.</p>
+
+        <h2 id="timeline">Timeline Scrubbing</h2>
+        <p>OrbitVoyage supports timeline scrubbing at 5x to 60x speed. This means instead of propagating to "now", the system propagates to <code>now + (elapsed * speed_multiplier)</code>. At 60x speed, one second of wall-clock time equals one minute of orbital time.</p>
+        <p>The challenge here is that SGP4 accuracy degrades as you propagate further from the TLE epoch. TLE sets are typically valid for 1-2 weeks. At 60x speed, you can easily exceed that window. I added visual indicators showing propagation confidence — green within epoch ±7 days, yellow at ±14 days, red beyond that.</p>
+
+        <h2 id="kalman">Kalman Filtering</h2>
+        <p>Raw SGP4 output has inherent noise — the algorithm is an analytical approximation, not a numerical integrator. For the telemetry display, I pass the position and velocity through a <strong>Kalman filter</strong> to smooth the output.</p>
+        <p>The Kalman filter maintains a state estimate and uncertainty. Each new SGP4 propagation is treated as a "measurement" that updates the estimate. The result is telemetry that doesn't jitter between frames, which is critical for readable velocity and altitude readouts.</p>
+
+        <h2 id="takeaways">Takeaways</h2>
+        <p>Building OrbitVoyage taught me that the most interesting engineering problems live at the intersection of domains. This project required orbital mechanics, real-time rendering, performance optimization, and data visualization — all in a browser.</p>
+        <p>The web platform is dramatically more capable than people think. You can run real-time physics simulations, render 3D scenes at 60fps, and process thousands of mathematical operations per frame — all in vanilla JavaScript and WebGL. The constraint isn't the platform; it's knowing how to use it.</p>
+        <p>Check it out live at <a href="https://orbitvoyage.vercel.app" target="_blank" rel="noopener noreferrer">orbitvoyage.vercel.app</a>.</p>
+
+      </div>
+
+      <footer class="article-footer">
+        <div class="article-crosslink" style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.1);">
+          <h3 style="font-size: 1.2rem; margin-bottom: 1rem;">See this in action</h3>
+          <p style="color: rgba(255,255,255,0.7); margin-bottom: 1rem;">I built a full real-time dashboard using these principles.</p>
+          <a href="../case-orbitvoyage.html" style="color: var(--c-cyan); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 0.5rem;">
+            Read the OrbitVoyage Case Study
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 12l4-4-4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+        <div class="article-footer-author">
+          <img src="../assets/images/pfp.jpeg" alt="Sparsh Sharma - Full-Stack Developer" class="article-footer-avatar" width="48" height="48">
+          <div class="article-footer-bio">
+            <span class="article-footer-name">Sparsh Sharma</span>
+            <span class="article-footer-desc">17-year-old full-stack developer studying B.Tech CSE. Creator of Manshverse. Building from Bangalore.</span>
+          </div>
+        </div>
+        <nav class="article-nav">
+          <a href="building-transformers-from-scratch.html" class="article-nav-link">
+            <span class="article-nav-label">← Previous Article</span>
+            <span class="article-nav-title">Building a Transformer from Scratch</span>
+          </a>
+          <a href="building-ai-routing-engine.html" class="article-nav-link next">
+            <span class="article-nav-label">Next Article →</span>
+            <span class="article-nav-title">Building an AI Routing Engine</span>
+          </a>
+        </nav>
+      </footer>
+
+    </article>
+
+    <div></div>
+
+  </div>
+
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    const fill = document.getElementById('reading-fill');
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      if (fill && max > 0) fill.style.width = Math.min((y / max) * 100, 100) + '%';
+    }, { passive: true });
+    const headings = document.querySelectorAll('.article-prose h2');
+    const tocLinks = document.querySelectorAll('.article-toc-list a');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tocLinks.forEach(l => l.classList.remove('active'));
+          const match = document.querySelector(`.article-toc-list a[href="#${entry.target.id}"]`);
+          if (match) match.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-80px 0px -70% 0px' });
+    headings.forEach(h => observer.observe(h));
+    const cur = document.getElementById('cur');
+    if (cur && window.matchMedia('(pointer:fine)').matches) {
+      gsap.set(cur, { xPercent: -50, yPercent: -50 });
+      let xTo = gsap.quickTo(cur, 'x', { duration: 0.15, ease: 'power3' });
+      let yTo = gsap.quickTo(cur, 'y', { duration: 0.15, ease: 'power3' });
+      window.addEventListener('mousemove', e => { xTo(e.clientX); yTo(e.clientY); if (!cur.classList.contains('vis')) cur.classList.add('vis'); });
+      document.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('mouseenter', () => { gsap.to(cur, { width: 60, height: 60, backgroundColor: '#fff', border: 'none', mixBlendMode: 'difference', duration: 0.3 }); });
+        el.addEventListener('mouseleave', () => { gsap.to(cur, { width: 18, height: 18, backgroundColor: 'transparent', border: '1.5px solid rgba(255,255,255,0.5)', mixBlendMode: 'normal', duration: 0.3 }); });
+      });
+    }
+  })();
+  </script>
+
+</body>
+</html>

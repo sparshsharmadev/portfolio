@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="google-site-verification" content="j9zoyKoJEDuGyZRXFS7Ia9h9iPoy5mp_ys6MBEc9iYg" />
+  <meta name="theme-color" content="#000000">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Technical Journal by Sparsh Sharma — deep-dive articles on AI/ML, transformer architectures, satellite tracking, multi-model routing, and full-stack engineering.">
+  <meta name="keywords"
+    content="Sparsh Sharma blog, AI engineering articles, transformer training PyTorch, SGP4 satellite tracking, full-stack developer blog, Bangalore developer, technical writing">
+  <meta name="author" content="Sparsh Sharma">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+  <link rel="canonical" href="https://sparshsharma-dev.xyz/blog">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="blog">
+  <meta property="og:url" content="https://sparshsharma-dev.xyz/blog">
+  <meta property="og:title" content="Technical Journal — Sparsh Sharma">
+  <meta property="og:description"
+    content="Deep-dive articles on training transformers from scratch, satellite tracking math, AI routing engines, and building production systems.">
+  <meta property="og:image" content="https://sparshsharma-dev.xyz/assets/images/pfp.jpeg">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:site_name" content="Sparsh Sharma — Developer Portfolio">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Technical Journal — Sparsh Sharma">
+  <meta name="twitter:description"
+    content="Deep-dive articles on training transformers, satellite tracking, and building production AI systems.">
+  <meta name="twitter:image" content="https://sparshsharma-dev.xyz/assets/images/pfp.jpeg">
+
+  <title>Technical Journal | Sparsh Sharma</title>
+
+  <!-- Schema Markup (Blog) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Technical Journal — Sparsh Sharma",
+    "description": "Technical articles on AI/ML engineering, full-stack development, satellite tracking, and building production systems from scratch.",
+    "url": "https://sparshsharma-dev.xyz/blog",
+    "author": {
+      "@type": "Person",
+      "@id": "https://sparshsharma-dev.xyz/#sparsh",
+      "name": "Sparsh Sharma",
+      "url": "https://sparshsharma-dev.xyz/"
+    },
+    "blogPost": [
+      {
+        "@type": "BlogPosting",
+        "headline": "Building a Transformer from Scratch in PyTorch",
+        "url": "https://sparshsharma-dev.xyz/blog/building-transformers-from-scratch",
+        "datePublished": "2026-07-28",
+        "author": { "@type": "Person", "name": "Sparsh Sharma" }
+      },
+      {
+        "@type": "BlogPosting",
+        "headline": "Tracking 250+ Satellites at 60fps: The Math Behind OrbitVoyage",
+        "url": "https://sparshsharma-dev.xyz/blog/sgp4-satellite-tracking-web",
+        "datePublished": "2026-07-20",
+        "author": { "@type": "Person", "name": "Sparsh Sharma" }
+      },
+      {
+        "@type": "BlogPosting",
+        "headline": "Building an AI Routing Engine: How Manshverse Picks the Right Model",
+        "url": "https://sparshsharma-dev.xyz/blog/building-ai-routing-engine",
+        "datePublished": "2026-07-10",
+        "author": { "@type": "Person", "name": "Sparsh Sharma" }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="blog-style.css">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" type="image/png" sizes="48x48" href="assets/images/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/images/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/images/favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+</head>
+
+<body>
+
+  <!-- Noise grain -->
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- Custom cursor -->
+  <div class="cur" id="cur" aria-hidden="true"></div>
+
+  <!-- Nav Bar -->
+  <header class="nav scrolled" id="nav">
+    <div class="nav-inner">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/images/pfp.jpeg" alt="Sparsh Sharma - Full-Stack Developer" class="nav-avatar" width="36" height="36">
+        <span class="nav-name">sparsh<span class="nav-name-dim">.dev</span></span>
+      </a>
+
+      <button class="nav-burger" id="nav-burger" type="button" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span>
+      </button>
+
+      <nav class="nav-menu" id="nav-menu" aria-label="Primary">
+        <a href="index.html#work" class="nav-link">
+          <span class="nav-link-num">01</span>Work
+        </a>
+        <a href="index.html#clients" class="nav-link">
+          <span class="nav-link-num">02</span>Clients
+        </a>
+        <a href="index.html#creds" class="nav-link">
+          <span class="nav-link-num">03</span>Creds
+        </a>
+        <a href="blog.html" class="nav-link" style="color:var(--t1);background:rgba(255,255,255,.06)">
+          <span class="nav-link-num">04</span>Journal
+        </a>
+        <a href="index.html#contact" class="nav-link">
+          <span class="nav-link-num">05</span>Hire
+        </a>
+        <a class="nav-cta magnetic" href="resume.html">
+          Resume →
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Blog Hero -->
+    <section class="blog-hero">
+      <div class="wrap">
+        <div class="blog-hero-inner" data-reveal>
+          <span class="blog-hero-tag">TECHNICAL JOURNAL &mdash; WRITINGS &amp; RESEARCH</span>
+          <h1 class="blog-hero-title">Technical Journal</h1>
+          <p class="blog-hero-sub">Deep-dive technical articles on AI/ML engineering, orbital mechanics, multi-model routing, and building production systems from scratch.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Blog Content -->
+    <section class="sect" style="border-top:none;padding-top:0;">
+      <div class="wrap">
+
+        <!-- Filter Bar -->
+        <div class="blog-filters" data-reveal>
+          <button class="blog-filter active" data-filter="all">All</button>
+          <button class="blog-filter" data-filter="ai-ml">AI / ML</button>
+          <button class="blog-filter" data-filter="frontend">Frontend</button>
+          <button class="blog-filter" data-filter="backend">Backend</button>
+          <button class="blog-filter" data-filter="architecture">Architecture</button>
+          <button class="blog-filter" data-filter="astrophysics">Astrophysics</button>
+        </div>
+
+        <!-- Article Cards -->
+        <div class="blog-grid" id="blog-grid">
+
+          <!-- Article 1 -->
+          <a href="blog/building-transformers-from-scratch.html" class="blog-card" data-reveal data-tags="ai-ml">
+            <div class="blog-card-body">
+              <div class="blog-card-meta">
+                <span>July 28, 2026</span>
+                <span class="dot"></span>
+                <span>18 min read</span>
+              </div>
+              <h2 class="blog-card-title">Building a Transformer from Scratch in PyTorch</h2>
+              <p class="blog-card-excerpt">I trained my own transformer model from the ground up — no HuggingFace, no shortcuts. Here's the full breakdown: multi-head attention, positional encoding, training loops, and the mistakes that actually taught me how these things work.</p>
+              <div class="blog-card-tags">
+                <span>PyTorch</span>
+                <span>Transformers</span>
+                <span>Deep Learning</span>
+                <span>From Scratch</span>
+              </div>
+            </div>
+            <div class="blog-card-side">
+              <span class="blog-card-num">01</span>
+              <svg class="blog-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+          </a>
+
+          <!-- Article 2 -->
+          <a href="blog/sgp4-satellite-tracking-web.html" class="blog-card" data-reveal data-tags="architecture astrophysics frontend">
+            <div class="blog-card-body">
+              <div class="blog-card-meta">
+                <span>July 20, 2026</span>
+                <span class="dot"></span>
+                <span>14 min read</span>
+              </div>
+              <h2 class="blog-card-title">Tracking 250+ Satellites at 60fps: The Math Behind OrbitVoyage</h2>
+              <p class="blog-card-excerpt">How I built a real-time satellite tracking dashboard that performs 2,400 SGP4 propagations per second — all inside a browser. Orbital mechanics, WebGL rendering, and the 16ms frame budget that controls everything.</p>
+              <div class="blog-card-tags">
+                <span>SGP4</span>
+                <span>WebGL</span>
+                <span>Three.js</span>
+                <span>Orbital Mechanics</span>
+              </div>
+            </div>
+            <div class="blog-card-side">
+              <span class="blog-card-num">02</span>
+              <svg class="blog-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+          </a>
+
+          <!-- Article 3 -->
+          <a href="blog/building-ai-routing-engine.html" class="blog-card" data-reveal data-tags="ai-ml architecture backend">
+            <div class="blog-card-body">
+              <div class="blog-card-meta">
+                <span>July 10, 2026</span>
+                <span class="dot"></span>
+                <span>12 min read</span>
+              </div>
+              <h2 class="blog-card-title">Building an AI Routing Engine: How Manshverse Picks the Right Model</h2>
+              <p class="blog-card-excerpt">When you have Groq, Gemini, and Mistral available — how does the system decide which model handles which prompt? I built a custom routing engine that classifies intent in real-time and dispatches accordingly.</p>
+              <div class="blog-card-tags">
+                <span>LLM Routing</span>
+                <span>Groq</span>
+                <span>Gemini</span>
+                <span>System Design</span>
+              </div>
+            </div>
+            <div class="blog-card-side">
+              <span class="blog-card-num">03</span>
+              <svg class="blog-card-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </div>
+          </a>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot-inner">
+      <span>&copy; 2026 Sparsh Sharma</span>
+      <span>Built from scratch. Bangalore, India.</span>
+    </div>
+  </footer>
+
+  <!-- GSAP -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <script>
+  (function () {
+    'use strict';
+
+    // Mobile nav
+    const burger = document.getElementById('nav-burger');
+    const menu = document.getElementById('nav-menu');
+    if (burger && menu) {
+      burger.addEventListener('click', () => {
+        const open = burger.classList.toggle('open');
+        menu.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+      });
+      menu.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          burger.classList.remove('open');
+          menu.classList.remove('open');
+          burger.setAttribute('aria-expanded', 'false');
+          document.body.style.overflow = '';
+        });
+      });
+    }
+
+    // GSAP Reveals
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+      gsap.registerPlugin(ScrollTrigger);
+      document.querySelectorAll('[data-reveal]').forEach(el => {
+        gsap.fromTo(el,
+          { autoAlpha: 0, y: 30 },
+          {
+            duration: 1.2,
+            autoAlpha: 1,
+            y: 0,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 92%',
+              toggleActions: 'play none none none'
+            }
+          }
+        );
+      });
+    }
+
+    // Filter logic
+    const filters = document.querySelectorAll('.blog-filter');
+    const cards = document.querySelectorAll('.blog-card');
+    filters.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filters.forEach(f => f.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        cards.forEach(card => {
+          if (filter === 'all') {
+            card.style.display = '';
+          } else {
+            const tags = card.dataset.tags || '';
+            card.style.display = tags.includes(filter) ? '' : 'none';
+          }
+        });
+      });
+    });
+
+    // Custom cursor
+    const cur = document.getElementById('cur');
+    if (cur && window.matchMedia('(pointer:fine)').matches) {
+      gsap.set(cur, { xPercent: -50, yPercent: -50 });
+      let xTo = gsap.quickTo(cur, 'x', { duration: 0.15, ease: 'power3' });
+      let yTo = gsap.quickTo(cur, 'y', { duration: 0.15, ease: 'power3' });
+      window.addEventListener('mousemove', e => {
+        xTo(e.clientX);
+        yTo(e.clientY);
+        if (!cur.classList.contains('vis')) cur.classList.add('vis');
+      });
+      document.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          gsap.to(cur, { width: 60, height: 60, backgroundColor: '#fff', border: 'none', mixBlendMode: 'difference', duration: 0.3 });
+        });
+        el.addEventListener('mouseleave', () => {
+          gsap.to(cur, { width: 18, height: 18, backgroundColor: 'transparent', border: '1.5px solid rgba(255,255,255,0.5)', mixBlendMode: 'normal', duration: 0.3 });
+        });
+      });
+    }
+  })();
+  </script>
+
+</body>
+
+</html>

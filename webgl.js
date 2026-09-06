@@ -1,6 +1,6 @@
 /**
- * webgl.js — Advanced Awwwards-Style WebGL Background
- * Interactive Particle Wave / Digital Terrain
+ * webgl.js — Advanced Interactive Particle Field
+ * Reacts dynamically to mouse cursor using Raycasting & Custom Shaders
  */
 (function () {
   'use strict';
@@ -16,73 +16,136 @@
     if (typeof THREE === 'undefined') return;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // Cap for perf but keep crisp
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(0x000000, 0);
     renderer.domElement.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100dvh;z-index:0;pointer-events:none;opacity:0;transition:opacity 2.5s cubic-bezier(0.19, 1, 0.22, 1)';
     document.body.insertBefore(renderer.domElement, document.body.firstChild);
-    document.body.style.background = '#000';
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x000000, 0.004);
+    scene.fog = new THREE.FogExp2(0x0a0a0a, 0.002);
 
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 80, 200);
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 2000);
+    camera.position.set(0, 0, 300);
 
-    // ── Advanced Particle Wave (Digital Terrain) ────────────────────────────
-    const SEPARATION = 4, AMOUNTX = 150, AMOUNTY = 100;
-    const numParticles = AMOUNTX * AMOUNTY;
-    const positions = new Float32Array(numParticles * 3);
-    const scales = new Float32Array(numParticles);
+    // ── Particle System Setup ──────────────────────────────────────────────
+    const AMOUNT = 4000;
+    const positions = new Float32Array(AMOUNT * 3);
+    const originalPositions = new Float32Array(AMOUNT * 3);
+    const sizes = new Float32Array(AMOUNT);
+    const randoms = new Float32Array(AMOUNT);
 
-    let i = 0, j = 0;
-    for (let ix = 0; ix < AMOUNTX; ix++) {
-      for (let iy = 0; iy < AMOUNTY; iy++) {
-        positions[i] = ix * SEPARATION - ((AMOUNTX * SEPARATION) / 2); // x
-        positions[i + 1] = 0; // y (will be animated)
-        positions[i + 2] = iy * SEPARATION - ((AMOUNTY * SEPARATION) / 2); // z
-        scales[j] = 1;
-        i += 3;
-        j++;
-      }
+    for (let i = 0; i < AMOUNT; i++) {
+      const i3 = i * 3;
+      // Spread in a large 3D volume
+      const x = (Math.random() - 0.5) * 1000;
+      const y = (Math.random() - 0.5) * 800;
+      const z = (Math.random() - 0.5) * 500;
+      
+      positions[i3] = x;
+      positions[i3 + 1] = y;
+      positions[i3 + 2] = z;
+
+      originalPositions[i3] = x;
+      originalPositions[i3 + 1] = y;
+      originalPositions[i3 + 2] = z;
+
+      sizes[i] = Math.random() * 2.5 + 0.5;
+      randoms[i] = Math.random();
     }
 
     const geometry = new THREE.BufferGeometry();
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('scale', new THREE.BufferAttribute(scales, 1));
+    geometry.setAttribute('aOriginalPosition', new THREE.BufferAttribute(originalPositions, 3));
+    geometry.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
+    geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1));
 
-    // Custom Shader Material for dynamic particle sizing and fading
+    // Custom Shader with Mouse Repulsion Math
     const material = new THREE.ShaderMaterial({
       uniforms: {
-        color: { value: new THREE.Color(0xffffff) },
+        uTime: { value: 0 },
+        uMouse: { value: new THREE.Vector3(9999, 9999, 9999) },
+        uColor1: { value: new THREE.Color(0x7c5cfc) }, // Purple accent
+        uColor2: { value: new THREE.Color(0x67e8f9) }  // Cyan accent
       },
       vertexShader: `
-        attribute float scale;
+        uniform float uTime;
+        uniform vec3 uMouse;
+        
+        attribute float aSize;
+        attribute vec3 aOriginalPosition;
+        attribute float aRandom;
+        
+        varying vec3 vColor;
+        varying float vAlpha;
+        
         void main() {
-          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-          gl_PointSize = scale * (300.0 / -mvPosition.z);
+          vec3 pos = position;
+          
+          // Gentle floating animation
+          pos.y += sin(uTime * 0.5 + aRandom * 10.0) * 15.0;
+          pos.x += cos(uTime * 0.3 + aRandom * 10.0) * 10.0;
+          
+          // Mouse Repulsion Logic
+          float dist = distance(pos, uMouse);
+          float maxDist = 150.0;
+          
+          if(dist < maxDist) {
+            vec3 dir = normalize(pos - uMouse);
+            // Repel force falls off with distance
+            float force = (maxDist - dist) / maxDist;
+            pos += dir * force * 50.0;
+          }
+          
+          vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+          gl_PointSize = aSize * (400.0 / -mvPosition.z);
           gl_Position = projectionMatrix * mvPosition;
+          
+          // Mix colors based on z-depth and random
+          vColor = mix(vec3(0.5, 0.5, 0.5), vec3(0.8, 0.8, 0.8), aRandom);
+          
+          // Highlight particles near the mouse with accent colors
+          float influence = smoothstep(maxDist * 1.5, 0.0, dist);
+          vec3 accent = mix(vec3(0.48, 0.36, 0.98), vec3(0.40, 0.90, 0.97), aRandom); // Purple to Cyan
+          vColor = mix(vColor, accent, influence * 0.8);
+          
+          vAlpha = smoothstep(0.0, 100.0, -mvPosition.z) * 0.7; // Fade out close particles
         }
       `,
       fragmentShader: `
-        uniform vec3 color;
+        varying vec3 vColor;
+        varying float vAlpha;
+        
         void main() {
-          if (length(gl_PointCoord - vec2(0.5, 0.5)) > 0.475) discard;
-          gl_FragColor = vec4(color, 0.15);
+          // Soft circle shape
+          float dist = length(gl_PointCoord - vec2(0.5));
+          if (dist > 0.5) discard;
+          
+          float alpha = (0.5 - dist) * 2.0 * vAlpha;
+          gl_FragColor = vec4(vColor, alpha);
         }
       `,
       transparent: true,
-      depthWrite: false
+      depthWrite: false,
+      blending: THREE.AdditiveBlending
     });
 
     const particles = new THREE.Points(geometry, material);
     scene.add(particles);
 
-    // ── Input & Scroll Tracking ──────────────────────────────────────────────
-    const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+    // ── Input Tracking & Raycasting ──────────────────────────────────────────────
+    const raycaster = new THREE.Raycaster();
+    const mouse2D = new THREE.Vector2(-999, -999);
+    
+    // Invisible plane at Z=0 to catch raycasts for the mouse 3D position
+    const planeGeo = new THREE.PlaneGeometry(3000, 3000);
+    const planeMat = new THREE.MeshBasicMaterial({ visible: false });
+    const plane = new THREE.Mesh(planeGeo, planeMat);
+    scene.add(plane);
+
     document.addEventListener('mousemove', (e) => {
-      mouse.tx = (e.clientX - window.innerWidth / 2) * 0.05;
-      mouse.ty = (e.clientY - window.innerHeight / 2) * 0.05;
+      mouse2D.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse2D.y = -(e.clientY / window.innerHeight) * 2 + 1;
     }, { passive: true });
 
     let scrollY = 0;
@@ -95,54 +158,34 @@
     });
 
     // ── Animation Loop ──────────────────────────────────────────────────────
-    let count = 0;
+    const clock = new THREE.Clock();
 
     function animate() {
       requestAnimationFrame(animate);
+      
+      const time = clock.getElapsedTime();
+      material.uniforms.uTime.value = time;
 
-      // Smooth mouse lerp
-      mouse.x += (mouse.tx - mouse.x) * 0.05;
-      mouse.y += (mouse.ty - mouse.y) * 0.05;
-
-      // Parallax camera
-      camera.position.x += (mouse.x - camera.position.x) * 0.05;
-      camera.position.y += (-mouse.y + 60 - camera.position.y) * 0.05;
-      camera.lookAt(scene.position);
-
-      // Animate wave
-      const positionsAttr = particles.geometry.attributes.position;
-      const scalesAttr = particles.geometry.attributes.scale;
-      let idx = 0;
-      let sIdx = 0;
-
-      for (let ix = 0; ix < AMOUNTX; ix++) {
-        for (let iy = 0; iy < AMOUNTY; iy++) {
-          // Dynamic sine wave math
-          positionsAttr.array[idx + 1] = 
-            (Math.sin((ix + count) * 0.3) * 15) + 
-            (Math.sin((iy + count) * 0.5) * 15);
-          
-          scalesAttr.array[sIdx] = 
-            (Math.sin((ix + count) * 0.3) + 1) * 2 + 
-            (Math.sin((iy + count) * 0.5) + 1) * 2;
-
-          // Push down based on scroll
-          positionsAttr.array[idx + 1] -= scrollY * 0.05;
-
-          idx += 3;
-          sIdx++;
-        }
+      // Raycast to find 3D mouse position on the invisible plane
+      raycaster.setFromCamera(mouse2D, camera);
+      const intersects = raycaster.intersectObject(plane);
+      
+      if (intersects.length > 0) {
+        // Smoothly lerp the uniform mouse position towards the actual intersection point
+        material.uniforms.uMouse.value.lerp(intersects[0].point, 0.1);
+      } else {
+        // Move it away if mouse is off-screen
+        material.uniforms.uMouse.value.lerp(new THREE.Vector3(0, 0, 1000), 0.05);
       }
 
-      positionsAttr.needsUpdate = true;
-      scalesAttr.needsUpdate = true;
-
-      count += 0.05;
+      // Parallax camera slightly on scroll
+      camera.position.y = -scrollY * 0.15;
+      camera.lookAt(0, -scrollY * 0.1, 0);
 
       renderer.render(scene, camera);
     }
 
-    setTimeout(() => { renderer.domElement.style.opacity = '0.7'; }, 400);
+    setTimeout(() => { renderer.domElement.style.opacity = '1'; }, 400);
     animate();
   }
 })();
